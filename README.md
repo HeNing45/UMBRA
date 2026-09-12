@@ -1,0 +1,163 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-reduced-motion: reduce)" srcset="portfolio/assets/umbra_cover_animated_preview.png"/>
+    <img src="portfolio/assets/umbra_cover_animated.svg" alt="UMBRA — a two-wide out-of-order RV32IM processor. 100 MHz FPGA core timing; 50 MHz academic ASIC implementation." width="100%"/>
+  </picture>
+</p>
+
+<p align="center">
+  <a href="rtl_superscalar/">RTL</a> ·
+  <a href="tb/">Testbenches</a> ·
+  <a href="docs/IMPLEMENTATION.md">Implementation</a> ·
+  <a href="sw/README.md">Benchmarks</a> ·
+  <a href="https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns">GDS release</a>
+</p>
+
+## UMBRA — a two-wide out-of-order RISC-V processor
+
+UMBRA is an RV32IM processor written in SystemVerilog, with register renaming,
+out-of-order execution and two-wide, in-order retirement. The repository
+includes the RTL, superscalar testbenches, bare-metal benchmarks and physical
+layout, alongside the earlier single-cycle, pipelined and scalar out-of-order cores.
+
+Implementation results include **100 MHz routed FPGA core timing** and a
+**50 MHz ASIC layout**, with the released GDS checked by both Calibre and IC Validator.
+The FPGA result is out-of-context timing on a KU5P, not a board-level result;
+the ASIC is an academic FreePDK45 / OSU gscl45nm implementation, not fabricated
+silicon.
+
+### The four cores
+
+Each generation is kept here so the design can be followed from the simplest
+datapath to the superscalar implementation.
+
+| Design | What it adds | Source |
+| --- | --- | --- |
+| Single-cycle RV32I | The starting point: fetch, decode and execute in one cycle | [rtl/](rtl/) |
+| Five-stage RV32IM pipeline | Overlapping instructions, forwarding, hazards and branch redirects | [rtl_p/](rtl_p/) |
+| Scalar out-of-order | Register renaming, dynamic scheduling and ordered retirement | [rtl_ooo/](rtl_ooo/) |
+| Two-wide out-of-order | Dual issue and retirement, two ALUs and a load/store queue | [rtl_superscalar/](rtl_superscalar/) |
+
+## Inside the superscalar core
+
+The core has a 32-entry reorder buffer, 64 physical registers, a unified
+16-entry issue queue and eight branch checkpoints. Two ALUs, a multiply/divide
+unit and a dedicated address-generation unit feed two writeback lanes.
+Eight-entry load and store queues manage memory operations, while retirement
+stays in program order. Registered selection and operand boundaries separate
+scheduling from execution.
+
+[Frontend](rtl_superscalar/rv32i_ss_frontend.sv) ·
+[Rename](rtl_superscalar/rv32i_ss_rename.sv) ·
+[Issue queue](rtl_superscalar/rv32i_ss_iq.sv) ·
+[Register file](rtl_superscalar/rv32i_ss_prf.sv) ·
+[Reorder buffer](rtl_superscalar/rv32i_ss_rob.sv) ·
+[Load/store queue](rtl_superscalar/rv32i_ss_lsq.sv) ·
+[Core integration](rtl_superscalar/rv32i_ss_core.sv)
+
+<details open>
+<summary>View the architecture schematic</summary>
+
+![UMBRA frontend, rename, scheduling, execution and memory](portfolio/assets/umbra_architecture.svg)
+
+[Open the full-size schematic](portfolio/assets/umbra_architecture.svg)
+
+</details>
+
+### Instruction set
+
+**RV32IM, with CSR instructions and partial machine-mode support.** The `M`
+multiply/divide extension is separate from machine privilege mode.
+
+| Area | Implemented support |
+| --- | --- |
+| Integer | Arithmetic, logic, shifts and comparisons; upper immediates; branches and jumps; byte, halfword and word loads/stores |
+| Multiply/divide | `MUL`, `MULH`, `MULHSU`, `MULHU`, `DIV`, `DIVU`, `REM`, `REMU` |
+| CSR instructions | Read/write, set and clear operations, including immediate forms |
+| Machine state | `mstatus`, `mtvec`, `mepc`, `mcause`, `mtval`, direct-mode trap entry and `MRET` |
+| Precise exceptions | `ECALL`, `EBREAK`, illegal instructions and misaligned instruction targets or data accesses |
+
+There are no interrupts, supervisor/user modes, MMU, PMP, compressed, atomic
+or floating-point extensions. Unsupported CSRs read as zero and ignore writes.
+`FENCE` and `FENCE.I` decode as no-ops; synchronization and full privileged
+architecture conformance are outside the implemented scope.
+
+[Decoder](rtl_p/rv32i_pipe_decode.sv) ·
+[Multiply/divide unit](rtl_superscalar/rv32i_ss_muldiv.sv) ·
+[CSR storage](rtl_superscalar/rv32i_ss_csr_file.sv)
+
+## Implementation results
+
+| | FPGA core | ASIC layout |
+| --- | --- | --- |
+| Target | Kintex UltraScale+ KU5P | FreePDK45 / OSU gscl45nm |
+| Clock | **100 MHz / 10 ns** | **50 MHz / 20 ns** |
+| Setup slack | **+0.601 ns** | **+4.363652 ns** |
+| Hold slack | **+0.012 ns** | **+0.000970 ns** |
+| Measurement | Vivado out-of-context routing | StarRC extraction + PrimeTime |
+
+The FPGA timing covers the CPU block only. External memory, full clock-network
+integration and software execution on a board are not included.
+
+The ASIC flow includes synthesis, placement, clock-tree synthesis, routing,
+formal equivalence and extracted timing. The released layout has zero failing
+setup/hold endpoints, zero routing DRCs and zero open nets. Calibre and
+IC Validator each reported **zero findings across 167 DRC checks**, with
+**LVS CORRECT** and **LVS PASS**, respectively, on the same GDS.
+
+**[Download the GDS](https://github.com/HeNing45/UMBRA/releases/download/physical-osu45-20ns/umbra_syn_island.gds)**
+· [KLayout layer file](physical/umbra_syn_island.lyp)
+· [Release and notices](https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns)
+· [Implementation notes](docs/IMPLEMENTATION.md)
+
+Separately, an **unplaced** Design Compiler/PrimeTime sweep passed at a
+2.40 ns target (about 417 MHz); 2.35 ns failed. This is a wire-load-model
+synthesis result, not the operating clock of either routed implementation.
+
+## Verification and benchmarks
+
+The repository includes 66 superscalar testbench sources, shared memory and
+trace helpers, Spike comparison support, and CoreMark and Embench ports.
+
+| Check | Result |
+| --- | --- |
+| [Spike comparison](verification/normalize_spike_trace.py) | The exported 16-instruction ALU commit-trace test passed |
+| [Directed testbenches](tb/) | 60 of 61 passed; the RAS benchmark retains a cycle-count mismatch, 403 observed versus 374 expected |
+| [CoreMark](sw/coremark/README.md) | Performance and validation seeds passed the expected CRC checks |
+| [Embench-IoT](sw/embench/) | All 19 programs completed with successful return values |
+
+The delayed-memory CoreMark sample measured **3.2029 iterations per million
+cycles** with the `max` compiler profile. It was a 16-iteration RTL run,
+not a qualifying ten-second CoreMark score or a hardware measurement.
+
+The Embench rerun measured **1.217/MHz** across 19 programs. At the FPGA's
+100 MHz clock, its combined timed sections project to **652.8 ms**, assuming
+the same memory behavior. This is a simulation projection, not an on-board
+benchmark. The run used GCC 15.2.0 at `-O2`, one-cycle instruction/data responses,
+pipelined instruction fetch and two outstanding data reads. XGBoost's upstream
+self-check is weak at the default scale factor.
+
+[Build and run checks](docs/IMPLEMENTATION.md#running-checks) ·
+[Software and benchmark ports](sw/README.md) ·
+[Simulation runner](verification/run.py) · [Makefile](Makefile)
+
+<details>
+<summary>Physical implementation limits</summary>
+
+This is an academic implementation, not foundry signoff. The sub-picosecond
+ASIC hold margin is not a robustness margin. Changed intracell metal was not
+recharacterized, and 100,517 zero-limit capacitance entries remain unresolved
+in the model. Some timing-check classes are untested; multi-corner analysis,
+IR-drop, electromigration, packaging and silicon qualification are not covered.
+
+Both LVS tools retain a source-intended VSS alias diagnostic. Agreement on this
+layout does not establish universal rule-deck equivalence. Proprietary tool
+reports and rule decks are not included in this repository.
+
+</details>
+
+## License
+
+Original project code is licensed under [Apache 2.0](LICENSE). Third-party
+software and cell geometry retain their own terms and credits; see
+[third-party notices](THIRD_PARTY_NOTICES.md).

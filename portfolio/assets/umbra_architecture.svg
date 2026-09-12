@@ -1,0 +1,242 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2760" height="1980" viewBox="0 0 2760 1980">
+  <rect width="2760" height="1980" fill="#ffffff"/>
+  <rect x="1280" y="30" width="720" height="92" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="1640.0" y="73.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">memory</text>
+  <text x="1640.0" y="92.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">instruction + data request / response channels</text>
+  <rect x="80" y="170" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="240.0" y="222.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">fetch request / response engine</text>
+  <text x="240.0" y="241.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">1 offer + 1 in flight, kill drains</text>
+  <rect x="80" y="370" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="240.0" y="422.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">fetch queue</text>
+  <text x="240.0" y="441.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">2 x 64-bit lines + prediction</text>
+  <rect x="80" y="570" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="240.0" y="622.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">decode x2</text>
+  <text x="240.0" y="641.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">rv32i_ss_decode</text>
+  <rect x="80" y="770" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="240.0" y="822.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">formation</text>
+  <text x="240.0" y="841.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">shapes 01 / 11</text>
+  <rect x="80" y="970" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="240.0" y="1022.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">branch predictor (BTB)</text>
+  <text x="240.0" y="1041.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">64 rows x 42 b, 2 lookup / 1 update</text>
+  <rect x="80" y="1170" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="240.0" y="1222.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">return address stack</text>
+  <text x="240.0" y="1241.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">8 x 32 b, core-owned</text>
+  <rect x="500" y="170" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="660.0" y="222.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">dispatch gate</text>
+  <text x="660.0" y="241.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">atomic bundle fire</text>
+  <rect x="500" y="370" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="660.0" y="422.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">rename</text>
+  <text x="660.0" y="441.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">spec + committed maps, 8 checkpoints</text>
+  <rect x="500" y="570" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="660.0" y="622.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">free list</text>
+  <text x="660.0" y="641.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">64 physical x 2 images</text>
+  <rect x="500" y="770" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="660.0" y="822.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">CSR file</text>
+  <text x="660.0" y="841.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">5 CSRs, architectural write at commit</text>
+  <rect x="500" y="970" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="660.0" y="1022.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">trap unit</text>
+  <text x="660.0" y="1041.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">trap_q full flush</text>
+  <rect x="880" y="370" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="1040.0" y="422.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">ROB - 32</text>
+  <text x="1040.0" y="441.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">ring idx + rob_seq, commit 0-2</text>
+  <rect x="880" y="570" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="1040.0" y="622.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">issue queue - 16</text>
+  <text x="1040.0" y="641.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">dominance select, 2 grants</text>
+  <rect x="880" y="770" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="1040.0" y="822.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">select_pipe</text>
+  <text x="1040.0" y="841.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">registered 2-wide grant</text>
+  <rect x="880" y="970" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="1040.0" y="1022.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">register file 64 x 32</text>
+  <text x="1040.0" y="1041.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">4 read / 2 write + ready table</text>
+  <rect x="1280" y="570" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="1440.0" y="622.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">execute input banks</text>
+  <text x="1440.0" y="641.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">ALU0 x2, ALU1 x2, AGEN x2, MD x1</text>
+  <rect x="1360" y="770" width="240" height="96" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="1480.0" y="815.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">ALU0</text>
+  <text x="1480.0" y="834.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">integer + branch compare</text>
+  <rect x="1360" y="970" width="240" height="96" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="1480.0" y="1015.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">ALU1</text>
+  <text x="1480.0" y="1034.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">integer + branch compare</text>
+  <rect x="1360" y="1170" width="240" height="96" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="1480.0" y="1215.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">muldiv</text>
+  <text x="1480.0" y="1234.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">2-stage MUL / 32-iteration DIV</text>
+  <rect x="1360" y="1370" width="240" height="96" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="1480.0" y="1415.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">AGEN</text>
+  <text x="1480.0" y="1434.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">address + store byte enables</text>
+  <rect x="1280" y="1570" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="1440.0" y="1622.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">completion arbiter</text>
+  <text x="1440.0" y="1641.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">5 clients, top-2 by ring age</text>
+  <rect x="1280" y="1770" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="1440.0" y="1822.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">CDB lanes (cdb_q)</text>
+  <text x="1440.0" y="1841.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">2 registered beats</text>
+  <rect x="1680" y="970" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="1840.0" y="1022.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">branch compare</text>
+  <text x="1840.0" y="1041.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">taken / target mismatch</text>
+  <rect x="1680" y="1170" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="1840.0" y="1222.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">branch combiner</text>
+  <text x="1840.0" y="1241.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">oldest recovery, releases</text>
+  <rect x="2080" y="770" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="2240.0" y="822.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">load / store queue</text>
+  <text x="2240.0" y="841.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">LQ 8 / SQ 8, K = 2 reads</text>
+  <path d="M980 62 L1054 77.08 L1054 104.92 L980 120 Z" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="1017.0" y="55" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#111111;font-style:italic">mux</text>
+  <circle cx="720" cy="91" r="15" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="720" y="95" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#111111">+8</text>
+  <path d="M200 170 L200 91 L704 91" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M704 91 L693.0 95.2 L693.0 86.8 Z" fill="#111111"/>
+  <path d="M736 91 L980 91" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M1054 91 L1390 91 L1390 122" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M1390 122 L1385.8 111.0 L1394.2 111.0 Z" fill="#111111"/>
+  <text x="1170" y="83" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">imem_req_valid, imem_req_addr</text>
+  <path d="M472 265 L472 44 L920 44 L920 76 L979 76" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M979 76 L968.0 80.2 L968.0 71.8 Z" fill="#111111"/>
+  <circle cx="472" cy="265" r="3.0" fill="#111111"/>
+  <path d="M472 265 L402 265" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M402 265 L413.0 260.8 L413.0 269.2 Z" fill="#111111"/>
+  <text x="700" y="37" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">redirect_target, pred_target</text>
+  <path d="M1450 122 L1450 140 L300 140 L300 167" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M300 167 L295.8 156.0 L304.2 156.0 Z" fill="#111111"/>
+  <text x="700" y="132" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">imem_resp_valid, imem_resp_data[1:0]</text>
+  <path d="M240 280 L240 370" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M240 370 L235.8 359.0 L244.2 359.0 Z" fill="#111111"/>
+  <text x="250" y="329.0" text-anchor="start" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">fq_data, fq_base, fq_pred_*</text>
+  <path d="M240 480 L240 570" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M240 570 L235.8 559.0 L244.2 559.0 Z" fill="#111111"/>
+  <text x="250" y="529.0" text-anchor="start" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">head_line_data, head_pc</text>
+  <path d="M240 680 L240 770" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M240 770 L235.8 759.0 L244.2 759.0 Z" fill="#111111"/>
+  <text x="250" y="729.0" text-anchor="start" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">dec slot 0 / slot 1</text>
+  <path d="M400 825 L430 825 L430 325 L660 325 L660 282" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M660 282 L664.2 293.0 L655.8 293.0 Z" fill="#111111"/>
+  <text x="600" y="296" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">decoded_valid, decoded_slot_valid[1:0],</text>
+  <text x="600" y="310" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">decoded_pc/instr, rs1 rs2 rd, rd_we</text>
+  <path d="M400 1005 L452 1005 L452 245 L402 245" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M402 245 L413.0 240.8 L413.0 249.2 Z" fill="#111111"/>
+  <text x="462" y="700" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round" transform="rotate(-90 462 700)">predict_taken, predict_target</text>
+  <path d="M80 200 L20 200 L20 1005 L78 1005" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M78 1005 L67.0 1009.2 L67.0 1000.8 Z" fill="#111111"/>
+  <text x="30" y="700" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round" transform="rotate(-90 30 700)">req_offer_addr (pc_f0, pc_f1)</text>
+  <path d="M80 1225 L60 1225 L60 1100 L412 1100 L412 205 L402 205" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M402 205 L413.0 200.8 L413.0 209.2 Z" fill="#111111"/>
+  <text x="240" y="1093" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">ras_fetch_target, ras_fetch_valid</text>
+  <path d="M630 280 L630 370" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M630 370 L625.8 359.0 L634.2 359.0 Z" fill="#111111"/>
+  <text x="700" y="329.0" text-anchor="start" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">bundle_fire, bundle_size</text>
+  <path d="M740 480 L740 495 L1020 495 L1020 482" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M1020 482 L1024.2 493.0 L1015.8 493.0 Z" fill="#111111"/>
+  <text x="880" y="488" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">rob_alloc_pc/instr, pdst, stale_pdst</text>
+  <path d="M680 570 L680 483" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M680 483 L684.2 494.0 L675.8 494.0 Z" fill="#111111"/>
+  <text x="690" y="529.0" text-anchor="start" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">preg_alloc_reg, preg_avail</text>
+  <path d="M580 480 L580 567" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M580 567 L575.8 556.0 L584.2 556.0 Z" fill="#111111"/>
+  <text x="570" y="529.0" text-anchor="end" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">preg_slot_need</text>
+  <path d="M960 480 L960 515 L620 515 L620 482" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M620 482 L624.2 493.0 L615.8 493.0 Z" fill="#111111"/>
+  <text x="790" y="508" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">commit_fire, commit_rd, commit_pdst, stale_pdst</text>
+  <path d="M780 480 L780 555 L1150 555 L1150 567" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M1150 567 L1145.8 556.0 L1154.2 556.0 Z" fill="#111111"/>
+  <text x="880" y="548" text-anchor="start" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">iq_alloc_entry</text>
+  <path d="M1020 480 L1020 567" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M1020 567 L1015.8 556.0 L1024.2 556.0 Z" fill="#111111"/>
+  <text x="1000" y="529.0" text-anchor="end" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">rob_head_idx</text>
+  <path d="M1040 680 L1040 767" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M1040 767 L1035.8 756.0 L1044.2 756.0 Z" fill="#111111"/>
+  <text x="1050" y="729.0" text-anchor="start" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">issue_valid, issue_entry, issue_unit</text>
+  <path d="M1120 880 L1120 967" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M1120 967 L1115.8 956.0 L1124.2 956.0 Z" fill="#111111"/>
+  <text x="1130" y="929.0" text-anchor="start" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">read ports 1..4</text>
+  <path d="M880 1025 L855 1025 L855 620 L877 620" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M877 620 L866.0 624.2 L866.0 615.8 Z" fill="#111111"/>
+  <text x="847" y="800" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round" transform="rotate(-90 847 800)">ready_vec</text>
+  <path d="M1200 1010 L1245 1010 L1245 640 L1277 640" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M1277 640 L1266.0 644.2 L1266.0 635.8 Z" fill="#111111"/>
+  <text x="1257" y="830" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round" transform="rotate(-90 1257 830)">op_a, op_b (bypassed)</text>
+  <path d="M1310 680 L1310 1418" fill="none" stroke="#111111" stroke-width="2.6" stroke-linejoin="miter"/>
+  <path d="M1310 818 L1358 818" fill="none" stroke="#111111" stroke-width="2.6" stroke-linejoin="miter"/>
+  <path d="M1358 818 L1347.0 822.2 L1347.0 813.8 Z" fill="#111111"/>
+  <circle cx="1310" cy="818" r="3.0" fill="#111111"/>
+  <path d="M1310 1018 L1358 1018" fill="none" stroke="#111111" stroke-width="2.6" stroke-linejoin="miter"/>
+  <path d="M1358 1018 L1347.0 1022.2 L1347.0 1013.8 Z" fill="#111111"/>
+  <circle cx="1310" cy="1018" r="3.0" fill="#111111"/>
+  <path d="M1310 1218 L1358 1218" fill="none" stroke="#111111" stroke-width="2.6" stroke-linejoin="miter"/>
+  <path d="M1358 1218 L1347.0 1222.2 L1347.0 1213.8 Z" fill="#111111"/>
+  <circle cx="1310" cy="1218" r="3.0" fill="#111111"/>
+  <path d="M1310 1418 L1358 1418" fill="none" stroke="#111111" stroke-width="2.6" stroke-linejoin="miter"/>
+  <path d="M1358 1418 L1347.0 1422.2 L1347.0 1413.8 Z" fill="#111111"/>
+  <circle cx="1310" cy="1418" r="3.0" fill="#111111"/>
+  <text x="1300" y="1140" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round" transform="rotate(-90 1300 1140)">exec operands: alu0/alu1 a,b - md a,b - agen a,b</text>
+  <path d="M1600 818 L1630 818" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <circle cx="1630" cy="818" r="3.0" fill="#111111"/>
+  <path d="M1600 1018 L1630 1018" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <circle cx="1630" cy="1018" r="3.0" fill="#111111"/>
+  <path d="M1600 1218 L1630 1218" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <circle cx="1630" cy="1218" r="3.0" fill="#111111"/>
+  <path d="M1600 1418 L1630 1418" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <circle cx="1630" cy="1418" r="3.0" fill="#111111"/>
+  <path d="M1630 818 L1630 1600" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M1630 1600 L1602 1600" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M1602 1600 L1613.0 1595.8 L1613.0 1604.2 Z" fill="#111111"/>
+  <text x="1642" y="1150" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round" transform="rotate(-90 1642 1150)">completion_packet_t: alu0, alu1, muldiv, agen/sq</text>
+  <path d="M2080 820 L2020 820 L2020 1636 L1602 1636" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M1602 1636 L1613.0 1631.8 L1613.0 1640.2 Z" fill="#111111"/>
+  <text x="2008" y="813" text-anchor="end" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">lq_complete</text>
+  <path d="M1410 1680 L1410 1767" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M1410 1767 L1405.8 1756.0 L1414.2 1756.0 Z" fill="#111111"/>
+  <text x="1420" y="1729.0" text-anchor="start" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">cdb_next</text>
+  <path d="M1280 1825 L1235 1825" fill="none" stroke="#111111" stroke-width="2.6" stroke-linejoin="miter"/>
+  <path d="M1235 1825 L1235 425" fill="none" stroke="#111111" stroke-width="2.6" stroke-linejoin="miter"/>
+  <path d="M1235 425 L1202 425" fill="none" stroke="#111111" stroke-width="2.6" stroke-linejoin="miter"/>
+  <path d="M1202 425 L1213.0 420.8 L1213.0 429.2 Z" fill="#111111"/>
+  <text x="1226" y="1150" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round" transform="rotate(-90 1226 1150)">accepted CDB writeback: wb_result, wb_rob_idx, wb_rob_seq  -&gt;  ROB mark, PRF value + ready, SQ data snoop</text>
+  <circle cx="1235" cy="1025" r="3.0" fill="#111111"/>
+  <path d="M1235 1025 L1202 1025" fill="none" stroke="#111111" stroke-width="2.6" stroke-linejoin="miter"/>
+  <path d="M1202 1025 L1213.0 1020.8 L1213.0 1029.2 Z" fill="#111111"/>
+  <circle cx="1235" cy="600" r="3.0" fill="#111111"/>
+  <path d="M1235 600 L1278 600" fill="none" stroke="#111111" stroke-width="2.6" stroke-linejoin="miter"/>
+  <path d="M1278 600 L1267.0 604.2 L1267.0 595.8 Z" fill="#111111"/>
+  <path d="M2400 810 L2520 810 L2520 110 L2002 110" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M2002 110 L2013.0 105.8 L2013.0 114.2 Z" fill="#111111"/>
+  <text x="2512" y="620" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round" transform="rotate(-90 2512 620)">dmem_valid, dmem_we, dmem_be, dmem_addr, dmem_wdata</text>
+  <path d="M2002 62 L2560 62 L2560 850 L2402 850" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M2402 850 L2413.0 845.8 L2413.0 854.2 Z" fill="#111111"/>
+  <text x="2570" y="620" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round" transform="rotate(-90 2570 620)">dmem_ready, dmem_rvalid, dmem_rdata</text>
+  <path d="M1490 1466 L1490 1500 L2150 1500 L2150 882" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M2150 882 L2154.2 893.0 L2145.8 893.0 Z" fill="#111111"/>
+  <text x="1800" y="1493" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">lq_deposit_addr / sq_deposit_addr, deposit data, be</text>
+  <path d="M1600 850 L1645 850 L1645 1000 L1677 1000" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M1677 1000 L1666.0 1004.2 L1666.0 995.8 Z" fill="#111111"/>
+  <text x="1652" y="844" text-anchor="start" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">branch_taken[0], target</text>
+  <path d="M1600 1030 L1660 1030 L1660 1040 L1677 1040" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M1677 1040 L1666.0 1044.2 L1666.0 1035.8 Z" fill="#111111"/>
+  <text x="1666" y="1010" text-anchor="end" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">br_taken[1]</text>
+  <path d="M1840 1080 L1840 1167" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M1840 1167 L1835.8 1156.0 L1844.2 1156.0 Z" fill="#111111"/>
+  <text x="1850" y="1129.0" text-anchor="start" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">branch_candidate[1:0]</text>
+  <path d="M2000 1240 L2040 1240 L2040 535 L472 535 L472 265" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <text x="1250" y="528" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">redirect_valid, redirect_target  (registered recovery broadcast)</text>
+  <circle cx="980" cy="535" r="3.0" fill="#111111"/>
+  <path d="M980 535 L980 482" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M980 482 L984.2 493.0 L975.8 493.0 Z" fill="#111111"/>
+  <text x="972" y="560" text-anchor="end" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">kill ROB</text>
+  <circle cx="1040" cy="535" r="3.0" fill="#111111"/>
+  <path d="M1040 535 L1040 567" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M1040 567 L1035.8 556.0 L1044.2 556.0 Z" fill="#111111"/>
+  <text x="1048" y="560" text-anchor="start" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">kill IQ</text>
+  <circle cx="620" cy="535" r="3.0" fill="#111111"/>
+  <path d="M620 535 L620 482" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M620 482 L624.2 493.0 L615.8 493.0 Z" fill="#111111"/>
+  <text x="612" y="560" text-anchor="end" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">release ckpt</text>
+  <path d="M2000 1255 L2060 1255 L2060 860 L2078 860" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M2078 860 L2067.0 864.2 L2067.0 855.8 Z" fill="#111111"/>
+  <text x="2052" y="960" text-anchor="end" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round" transform="rotate(-90 2052 960)">kill LQ / SQ</text>
+  <path d="M1490 866 L1490 900 L140 900 L140 967" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M140 967 L135.8 956.0 L144.2 956.0 Z" fill="#111111"/>
+  <text x="760" y="893" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">bp_update_valid, bp_update_pc, bp_update_taken, bp_update_target</text>
+  <path d="M820 1000 L850 1000 L850 155 L340 155 L340 167" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M340 167 L335.8 156.0 L344.2 156.0 Z" fill="#111111"/>
+  <text x="600" y="148" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">trap_q_valid, trap_q_target  (full flush + redirect)</text>
+  <path d="M1000 370 L1000 315 L2748 315" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path d="M2748 315 L2737.0 319.2 L2737.0 310.8 Z" fill="#111111"/>
+  <text x="1900" y="308" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">commit_fire[1:0], commit_order, commit_pc/inst/rd/wdata</text>
+</svg>

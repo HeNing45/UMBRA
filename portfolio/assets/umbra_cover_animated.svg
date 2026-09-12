@@ -1,0 +1,184 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 540" role="img" aria-labelledby="title description">
+  <title id="title">UMBRA — a two-wide out-of-order RISC-V processor</title>
+  <desc id="description">A two-wide, out-of-order RV32IM processor. 100 MHz FPGA out-of-context core timing; 50 MHz academic ASIC implementation; DRC and LVS checked with Calibre and IC Validator. The gold eclipse starts with the processor visible. Simplified arrows connect fetch, rename, scheduling, register read, ALUs, multiply/divide, address generation, the load/store queue and writeback. Recovery and most control wiring are omitted; the branch connection represents support in both ALUs. An architectural illustration, not a chip-layout image.</desc>
+  <defs>
+    <linearGradient id="background" x2="1" y2="1">
+      <stop stop-color="#101722"/><stop offset=".55" stop-color="#090e16"/><stop offset="1" stop-color="#0e131a"/>
+    </linearGradient>
+    <radialGradient id="corona">
+      <stop offset=".48" stop-color="#edb96d" stop-opacity="0"/>
+      <stop offset=".62" stop-color="#e8b66d" stop-opacity=".19"/>
+      <stop offset=".72" stop-color="#e8b66d" stop-opacity=".055"/>
+      <stop offset="1" stop-color="#e8b66d" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ring" x1="0" y1="1" x2="1" y2="0">
+      <stop stop-color="#79532b"/><stop offset=".46" stop-color="#c4904b"/>
+      <stop offset=".76" stop-color="#fff2ce"/><stop offset="1" stop-color="#e0b774"/>
+    </linearGradient>
+    <radialGradient id="disc" cx=".36" cy=".25" r=".85">
+      <stop stop-color="#141c26"/><stop offset=".65" stop-color="#080d14"/><stop offset="1" stop-color="#05090e"/>
+    </radialGradient>
+    <linearGradient id="fade" x2="1">
+      <stop stop-color="#d6aa67" stop-opacity="0"/><stop offset=".6" stop-color="#d6aa67" stop-opacity=".28"/><stop offset="1" stop-color="#d6aa67" stop-opacity=".08"/>
+    </linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#d7e3ec" stroke-opacity=".027"/>
+    </pattern>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+    <clipPath id="frame"><rect width="1440" height="540" rx="20"/></clipPath>
+    <clipPath id="disc-clip"><circle cx="1100" cy="265" r="147"/></clipPath>
+    <marker id="core-arrow" viewBox="0 0 4 4" refX="4" refY="2" markerWidth="3.5" markerHeight="3.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M0 0L4 2L0 4Z" fill="#8cafb6"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+    .mono { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; }
+    .muted { fill:#8e9cae; }
+    .animated { transform-box:fill-box; transform-origin:center; }
+    .orbit { animation:orbit 100s linear infinite; }
+    .breath { animation:breath 8s ease-in-out infinite; }
+    .signal { animation:signal 8s linear infinite; }
+    .delayed { animation-delay:-4s; }
+    @keyframes orbit { to { transform:rotate(360deg); } }
+    @keyframes breath { 0%,100% { opacity:.5; } 50% { opacity:.95; } }
+    @keyframes signal { to { stroke-dashoffset:-320; } }
+    .core { opacity:1; animation:reveal-core 12s ease-in-out infinite; }
+    .veil { opacity:0; animation:cover-core 12s ease-in-out infinite; }
+    @keyframes reveal-core { 0%,35%,85%,100% { opacity:1; } 50%,65% { opacity:.1; } }
+    @keyframes cover-core { 0%,35%,85%,100% { opacity:0; } 50%,65% { opacity:1; } }
+    @media (prefers-reduced-motion:reduce) {
+      .animated,.core,.veil { animation:none !important; }
+      .core { opacity:1; }
+      .veil { opacity:0; }
+    }
+  </style>
+  <g clip-path="url(#frame)">
+    <rect width="1440" height="540" fill="url(#background)"/>
+    <rect width="1440" height="540" fill="url(#grid)"/>
+    <path d="M720 86H824L856 118H904 M704 108H804L832 136H887
+             M743 413H824L862 375H918 M688 437H842L881 398H931
+             M1270 140H1324L1350 114H1440 M1275 353H1322L1360 391H1440"
+          fill="none" stroke="url(#fade)" stroke-width="1"/>
+    <g fill="none" stroke="#dcac6a" stroke-width="1.5" stroke-dasharray="5 315" opacity=".55">
+      <path class="animated signal" d="M704 108H804L832 136H887"/>
+      <path class="animated signal delayed" d="M688 437H842L881 398H931"/>
+    </g>
+    <g fill="#b9c9da" opacity=".4">
+      <circle cx="750" cy="66" r="1.2"/><circle cx="1381" cy="228" r="1.3"/>
+      <circle cx="839" cy="287" r="1"/><circle cx="1328" cy="440" r="1"/>
+      <path d="M795 212h8m-4-4v8 M1360 321h8m-4-4v8" stroke="#b9c9da"/>
+    </g>
+
+    <text x="74" y="67" class="mono muted" font-size="14" letter-spacing="2.3">RISC-V / RTL TO PHYSICAL IMPLEMENTATION</text>
+    <path d="M74 94H114" stroke="#e7c18a" stroke-width="2"/>
+    <text x="65" y="251" fill="#f3f0e7" font-size="146" font-weight="500" letter-spacing="8">UMBRA</text>
+    <text x="74" y="309" fill="#d0d7df" font-size="27" font-weight="300">A two-wide, out-of-order RISC-V processor.</text>
+    <text x="75" y="348" class="muted" font-size="20">RV32IM in SystemVerilog. From RTL to layout.</text>
+
+    <g transform="translate(74 426)">
+      <text fill="#f0e6d7" font-size="30" font-weight="500">100 MHz</text>
+      <text y="27" class="mono muted" font-size="12">FPGA / ROUTED OOC</text>
+      <path d="M199 -26V30" stroke="#303b49"/>
+      <text x="231" fill="#f0e6d7" font-size="30" font-weight="500">50 MHz</text>
+      <text x="231" y="27" class="mono muted" font-size="12">ASIC / EXTRACTED</text>
+      <path d="M425 -26V30" stroke="#303b49"/>
+      <text x="457" fill="#f0e6d7" font-size="30" font-weight="500">DRC + LVS</text>
+      <text x="457" y="27" class="mono muted" font-size="12">CALIBRE + ICV</text>
+    </g>
+
+    <g class="eclipse" transform="translate(-98 -21.5) scale(1.08)">
+      <circle cx="1100" cy="265" r="230" fill="url(#corona)" class="animated breath"/>
+      <g fill="none" stroke="#b89159">
+        <circle cx="1100" cy="265" r="204" opacity=".16"/>
+        <circle cx="1100" cy="265" r="187" opacity=".17" stroke-dasharray="1 11"/>
+        <circle cx="1100" cy="265" r="204" class="animated orbit" opacity=".65"
+                stroke-dasharray="42 278 8 250 16 370 12 306"/>
+      </g>
+      <path d="M1100 49V63m0 404v14M884 265h14m404 0h14" stroke="#b6a17e" stroke-opacity=".5"/>
+      <circle cx="1100" cy="265" r="153" fill="none" stroke="#f0be70" stroke-width="9" opacity=".35" filter="url(#glow)"/>
+      <circle cx="1100" cy="265" r="150" fill="url(#disc)" stroke="url(#ring)" stroke-width="2.2" class="rim"/>
+      <g clip-path="url(#disc-clip)">
+        <g class="core">
+          <g fill="none" stroke="#baa071" stroke-opacity=".48" stroke-width="1">
+            <path d="M964 213h34m-41 26h41m-44 26h44m-41 26h41m-34 26h34
+                     M1202 213h34m-34 26h41m-41 26h44m-44 26h41m-41 26h34
+                     M1046 126v33m34-39v39m34-39v39m34-33v33
+                     M1046 371v32m34-32v39m34-39v39m34-39v32"/>
+          </g>
+          <rect x="998" y="159" width="204" height="212" rx="5" fill="#111d28" stroke="#c4a46d" stroke-opacity=".8"/>
+          <rect x="1006" y="167" width="188" height="196" rx="2" fill="#0d1721" stroke="#6a634f" stroke-opacity=".5"/>
+          <g fill="#223b47" stroke="#8cafb6" stroke-opacity=".45" stroke-width=".8">
+            <rect x="1014" y="178" width="172" height="24"/>
+            <rect x="1014" y="210" width="90" height="24"/>
+            <rect x="1112" y="210" width="32" height="24"/>
+            <rect x="1152" y="210" width="34" height="24"/>
+            <rect x="1014" y="242" width="50" height="24"/>
+            <rect x="1072" y="242" width="54" height="24"/>
+            <rect x="1134" y="242" width="52" height="24"/>
+            <rect x="1014" y="276" width="38" height="25"/>
+            <rect x="1058" y="276" width="38" height="25"/>
+            <rect x="1102" y="276" width="40" height="25"/>
+            <rect x="1148" y="276" width="38" height="25"/>
+            <rect x="1014" y="310" width="62" height="20"/>
+            <rect x="1090" y="310" width="96" height="20"/>
+            <rect x="1014" y="340" width="172" height="18"/>
+          </g>
+          <!-- Selected architectural paths only; the full schematic carries control details. -->
+          <g class="core-links" fill="none" stroke="#8cafb6" stroke-opacity=".8" stroke-width=".95" stroke-linejoin="round" stroke-linecap="round">
+            <g marker-end="url(#core-arrow)">
+              <path data-route="frontend-rename" d="M1059 202V210"/>
+              <path data-route="rename-rob" d="M1104 222H1112"/>
+              <path data-route="rob-csr" d="M1144 222H1152"/>
+              <path data-route="rename-iq" d="M1039 234V242"/>
+              <path data-route="iq-select" d="M1064 254H1072"/>
+              <path data-route="select-prf" d="M1126 254H1134"/>
+              <path data-route="operands-alu0" d="M1033 270V276"/>
+              <path data-route="operands-alu1" d="M1077 270V276"/>
+              <path data-route="operands-muldiv" d="M1122 270V276"/>
+              <path data-route="operands-agen" d="M1167 270V276"/>
+              <path data-route="alu0-branch" d="M1033 301V310"/>
+              <path data-route="agen-lsq" d="M1167 301V310"/>
+              <path data-route="results-cdb" d="M1083 305V335H1100V340"/>
+              <path data-route="lsq-cdb" d="M1138 330V340"/>
+              <path data-route="cdb-rob" d="M1186 349H1190V238H1128V234"/>
+              <path data-route="writeback-prf" d="M1190 254H1186"/>
+            </g>
+            <path data-route="operand-bus" d="M1160 266V270M1033 270H1167"/>
+            <path data-route="result-bus" d="M1052 288H1055V305H1122V301M1077 301V305"/>
+          </g>
+          <g class="core-junctions" fill="#8cafb6" opacity=".85">
+            <circle cx="1160" cy="270" r="1"/><circle cx="1077" cy="270" r="1"/>
+            <circle cx="1122" cy="270" r="1"/><circle cx="1077" cy="305" r="1"/>
+            <circle cx="1083" cy="305" r="1"/><circle cx="1190" cy="254" r="1"/>
+          </g>
+          <g class="mono" fill="#cedce1" font-size="8.5" text-anchor="middle" letter-spacing=".25">
+            <text x="1100" y="194">FRONTEND / FETCH / DECODE</text>
+            <text x="1059" y="225">RENAME / FREE</text>
+            <text x="1128" y="225">ROB</text>
+            <text x="1169" y="220" font-size="7" letter-spacing="0">CSR /</text>
+            <text x="1169" y="230" font-size="7" letter-spacing="0">TRAP</text>
+            <text x="1039" y="257">IQ</text>
+            <text x="1099" y="257">SELECT</text>
+            <text x="1160" y="257">PRF</text>
+            <text x="1033" y="292" font-size="8">ALU 0</text>
+            <text x="1077" y="292" font-size="8">ALU 1</text>
+            <text x="1122" y="292" font-size="7.5" letter-spacing="0">MUL/DIV</text>
+            <text x="1167" y="292" font-size="8">AGEN</text>
+            <text x="1045" y="323">BRANCH</text>
+            <text x="1138" y="323" font-size="8" letter-spacing="0">LOAD / STORE QUEUE</text>
+            <text x="1100" y="352">CDB</text>
+          </g>
+        </g>
+        <circle cx="1100" cy="265" r="147" fill="url(#disc)" class="veil"/>
+      </g>
+      <circle cx="1206" cy="159" r="12" fill="#ffe4b2" opacity=".7" filter="url(#glow)" class="animated breath"/>
+      <circle cx="1206" cy="159" r="2.7" fill="#fff7e4"/>
+    </g>
+
+
+    <rect x=".5" y=".5" width="1439" height="539" rx="20" fill="none" stroke="#2d3846"/>
+  </g>
+</svg>
