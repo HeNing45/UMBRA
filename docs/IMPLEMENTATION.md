@@ -38,6 +38,15 @@ These are RTL simulation checks. The short CoreMark runs are not qualifying
 benchmark scores. The directed superscalar suite passed 60 of 61 tests;
 `tb_rv32i_ss_ras_bench` still has a cycle-count mismatch (403 versus 374 expected).
 
+## Physical layout
+
+[Download the GDS](https://github.com/HeNing45/UMBRA/releases/download/physical-osu45-20ns/umbra_syn_island.gds)
+and [KLayout layer file](../physical/umbra_syn_island.lyp).
+The GDS is distributed through the [physical release](https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns),
+which also includes the license and third-party notices.
+
+In KLayout, open the GDS, select `umbra_syn_island`, and load the layer file.
+
 ## FPGA and benchmark results
 
 The KU5P core meets **100 MHz** in routed, out-of-context Vivado timing
