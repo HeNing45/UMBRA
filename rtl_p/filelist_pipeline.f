@@ -1,0 +1,12 @@
+rtl/fyp_cpu_pkg.sv
+rtl_p/rv32i_pipeline_pkg.sv
+rtl/rv32i_alu.sv
+rtl/rv32i_imm_gen.sv
+rtl/rv32i_regfile.sv
+rtl_p/rv32i_csr_file.sv
+rtl_p/rv32i_branch_cmp.sv
+rtl_p/rv32i_muldiv.sv
+rtl_p/rv32i_hazard.sv
+rtl_p/rv32i_pipe_decode.sv
+rtl_p/rv32i_bp.sv
+rtl_p/rv32i_pipeline_core.sv
