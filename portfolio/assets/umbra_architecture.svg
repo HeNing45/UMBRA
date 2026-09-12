@@ -1,4 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2760" height="1980" viewBox="0 0 2760 1980">
+  <title>UMBRA superscalar architecture</title>
+  <desc>Logical datapath and selected control connections. Each ALU execution group includes its own rv32i_branch_cmp; core logic checks prediction direction and target. Dispatch allocates load/store entries, updates the return stack and sets CSR serialization state. Retirement qualifies committed-map, free-list, CSR and load/store effects; trace outputs are observation only. Store-data snooping uses ROB-accepted CDB writes.</desc>
+  <defs>
+    <marker id="control-arrow" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M0 0L8 4L0 8Z" fill="#111111"/>
+    </marker>
+  </defs>
   <rect width="2760" height="1980" fill="#ffffff"/>
   <rect x="1280" y="30" width="720" height="92" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
   <text x="1640.0" y="73.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">memory</text>
@@ -16,20 +23,29 @@
   <text x="240.0" y="822.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">formation</text>
   <text x="240.0" y="841.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">shapes 01 / 11</text>
   <rect x="80" y="970" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
-  <text x="240.0" y="1022.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">branch predictor (BTB)</text>
-  <text x="240.0" y="1041.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">64 rows x 42 b, 2 lookup / 1 update</text>
+  <text x="240.0" y="991" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;fill:#111111">branch predictor (BTB)</text>
+  <text x="240.0" y="1013" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;fill:#444444">64 rows x 42 b, 2 lookups</text>
+  <text x="240.0" y="1035" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;fill:#444444">1 conditional update + return-site learning</text>
+  <text x="240.0" y="1057" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-style:italic;fill:#444444">same-row collision: conditional update wins</text>
   <rect x="80" y="1170" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
   <text x="240.0" y="1222.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">return address stack</text>
   <text x="240.0" y="1241.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">8 x 32 b, core-owned</text>
   <rect x="500" y="170" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
-  <text x="660.0" y="222.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">dispatch gate</text>
-  <text x="660.0" y="241.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">atomic bundle fire</text>
+  <text x="660.0" y="193" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;fill:#111111">dispatch gate / core serialization</text>
+  <text x="660.0" y="215" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;fill:#444444">atomic bundle_fire</text>
+  <path data-source="bundle_fire" data-target="csr_inflight_q" d="M660 220V241" fill="none" stroke="#111111" stroke-width="1.4" marker-end="url(#control-arrow)"/>
+  <text x="670" y="235" style="font-family:Helvetica,Arial,sans-serif;font-size:9px;fill:#444444">csr_alloc_fire</text>
+  <rect x="540" y="242" width="240" height="22" fill="#ffffff" stroke="#111111" stroke-width="1"/>
+  <text x="660" y="257" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10px;fill:#444444">csr_inflight_q: block younger dispatch</text>
+  <path data-source="csr_inflight_q" data-target="dispatch_accept" d="M780 253H802V212H750" fill="none" stroke="#111111" stroke-width="1.2" marker-end="url(#control-arrow)"/>
+  <text x="660" y="276" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:9px;fill:#444444">cleared by CSR commit, branch recovery or trap flush</text>
   <rect x="500" y="370" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
   <text x="660.0" y="422.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">rename</text>
   <text x="660.0" y="441.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">spec + committed maps, 8 checkpoints</text>
   <rect x="500" y="570" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
   <text x="660.0" y="622.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">free list</text>
   <text x="660.0" y="641.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">64 physical x 2 images</text>
+  <text x="660" y="662" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;fill:#444444">commit_pdst / commit_stale_pdst bookkeeping</text>
   <rect x="500" y="770" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
   <text x="660.0" y="822.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">CSR file</text>
   <text x="660.0" y="841.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">5 CSRs, architectural write at commit</text>
@@ -52,11 +68,13 @@
   <text x="1440.0" y="622.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">execute input banks</text>
   <text x="1440.0" y="641.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">ALU0 x2, ALU1 x2, AGEN x2, MD x1</text>
   <rect x="1360" y="770" width="240" height="96" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
-  <text x="1480.0" y="815.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">ALU0</text>
-  <text x="1480.0" y="834.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">integer + branch compare</text>
+  <text x="1480.0" y="800" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;fill:#111111">ALU0 execution group</text>
+  <text x="1480.0" y="823" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;fill:#444444">integer ALU + u_branch_cmp0</text>
+  <text x="1480.0" y="846" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-style:italic;fill:#444444">rv32i_branch_cmp instance 0</text>
   <rect x="1360" y="970" width="240" height="96" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
-  <text x="1480.0" y="1015.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">ALU1</text>
-  <text x="1480.0" y="1034.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">integer + branch compare</text>
+  <text x="1480.0" y="1000" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;fill:#111111">ALU1 execution group</text>
+  <text x="1480.0" y="1023" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;fill:#444444">integer ALU + u_branch_cmp1</text>
+  <text x="1480.0" y="1046" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-style:italic;fill:#444444">rv32i_branch_cmp instance 1</text>
   <rect x="1360" y="1170" width="240" height="96" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
   <text x="1480.0" y="1215.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">muldiv</text>
   <text x="1480.0" y="1234.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">2-stage MUL / 32-iteration DIV</text>
@@ -70,8 +88,9 @@
   <text x="1440.0" y="1822.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">CDB lanes (cdb_q)</text>
   <text x="1440.0" y="1841.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">2 registered beats</text>
   <rect x="1680" y="970" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
-  <text x="1840.0" y="1022.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">branch compare</text>
-  <text x="1840.0" y="1041.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">taken / target mismatch</text>
+  <text x="1840.0" y="1022.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;fill:#111111">core mispredict evaluation</text>
+  <text x="1840.0" y="1041.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-style:italic;fill:#444444">both lanes: direction / exact target mismatch</text>
+  <text x="1840" y="1062" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;fill:#444444">conditional training selects ALU0, then ALU1</text>
   <rect x="1680" y="1170" width="320" height="110" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
   <text x="1840.0" y="1222.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:13.5px;font-weight:normal;fill:#111111">branch combiner</text>
   <text x="1840.0" y="1241.0" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#444444;font-style:italic">oldest recovery, releases</text>
@@ -118,7 +137,7 @@
   <text x="30" y="700" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round" transform="rotate(-90 30 700)">req_offer_addr (pc_f0, pc_f1)</text>
   <path d="M80 1225 L60 1225 L60 1100 L412 1100 L412 205 L402 205" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
   <path d="M402 205 L413.0 200.8 L413.0 209.2 Z" fill="#111111"/>
-  <text x="240" y="1093" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">ras_fetch_target, ras_fetch_valid</text>
+  <text x="48" y="1135" text-anchor="middle" transform="rotate(-90 48 1135)" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;fill:#1b1b1b;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px">ras_fetch_target, ras_fetch_valid</text>
   <path d="M630 280 L630 370" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
   <path d="M630 370 L625.8 359.0 L634.2 359.0 Z" fill="#111111"/>
   <text x="700" y="329.0" text-anchor="start" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">bundle_fire, bundle_size</text>
@@ -133,7 +152,7 @@
   <text x="570" y="529.0" text-anchor="end" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">preg_slot_need</text>
   <path d="M960 480 L960 515 L620 515 L620 482" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
   <path d="M620 482 L624.2 493.0 L615.8 493.0 Z" fill="#111111"/>
-  <text x="790" y="508" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">commit_fire, commit_rd, commit_pdst, stale_pdst</text>
+  <text x="790" y="508" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">core-qualified commit_fire + ROB retirement payload</text>
   <path d="M780 480 L780 555 L1150 555 L1150 567" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
   <path d="M1150 567 L1145.8 556.0 L1154.2 556.0 Z" fill="#111111"/>
   <text x="880" y="548" text-anchor="start" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">iq_alloc_entry</text>
@@ -207,9 +226,8 @@
   <path d="M1600 850 L1645 850 L1645 1000 L1677 1000" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
   <path d="M1677 1000 L1666.0 1004.2 L1666.0 995.8 Z" fill="#111111"/>
   <text x="1652" y="844" text-anchor="start" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">branch_taken[0], target</text>
-  <path d="M1600 1030 L1660 1030 L1660 1040 L1677 1040" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
-  <path d="M1677 1040 L1666.0 1044.2 L1666.0 1035.8 Z" fill="#111111"/>
-  <text x="1666" y="1010" text-anchor="end" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">br_taken[1]</text>
+  <path d="M1600 1053H1677" fill="none" stroke="#111111" stroke-width="1.4" marker-end="url(#control-arrow)"/>
+  <text x="1675" y="1044" text-anchor="end" style="font-family:Helvetica,Arial,sans-serif;font-size:9px;fill:#1b1b1b;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">branch_taken[1]</text>
   <path d="M1840 1080 L1840 1167" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
   <path d="M1840 1167 L1835.8 1156.0 L1844.2 1156.0 Z" fill="#111111"/>
   <text x="1850" y="1129.0" text-anchor="start" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">branch_candidate[1:0]</text>
@@ -230,13 +248,45 @@
   <path d="M2000 1255 L2060 1255 L2060 860 L2078 860" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
   <path d="M2078 860 L2067.0 864.2 L2067.0 855.8 Z" fill="#111111"/>
   <text x="2052" y="960" text-anchor="end" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round" transform="rotate(-90 2052 960)">kill LQ / SQ</text>
-  <path d="M1490 866 L1490 900 L140 900 L140 967" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
+  <path data-source="core-conditional-update" data-target="btb-training" d="M1840 970V900H140V967" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
   <path d="M140 967 L135.8 956.0 L144.2 956.0 Z" fill="#111111"/>
   <text x="760" y="893" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">bp_update_valid, bp_update_pc, bp_update_taken, bp_update_target</text>
   <path d="M820 1000 L850 1000 L850 155 L340 155 L340 167" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
   <path d="M340 167 L335.8 156.0 L344.2 156.0 Z" fill="#111111"/>
   <text x="600" y="148" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">trap_q_valid, trap_q_target  (full flush + redirect)</text>
-  <path d="M1000 370 L1000 315 L2748 315" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="miter"/>
-  <path d="M2748 315 L2737.0 319.2 L2737.0 310.8 Z" fill="#111111"/>
-  <text x="1900" y="308" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:normal;fill:#1b1b1b;font-style:italic;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">commit_fire[1:0], commit_order, commit_pc/inst/rd/wdata</text>
+  <path d="M1000 370 L1000 315 L2610 315" fill="none" stroke="#111111" stroke-width="1.4" marker-end="url(#control-arrow)"/>
+  <text x="1820" y="308" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;fill:#1b1b1b;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px">core-qualified commit_fire + ROB retirement payload / trace</text>
+  <rect x="2610" y="278" width="128" height="74" fill="#ffffff" stroke="#111111" stroke-width="1.5"/>
+  <text x="2674" y="309" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:12px;fill:#111111">commit trace</text>
+  <text x="2674" y="330" text-anchor="middle" style="font-family:Helvetica,Arial,sans-serif;font-size:10px;fill:#444444">observation only</text>
+
+  <g id="control-connections" fill="none" stroke="#111111" stroke-width="1.4" stroke-linejoin="round">
+    <path data-source="dispatch" data-target="lsq-alloc" d="M820 200H2180V770" marker-end="url(#control-arrow)"/>
+    <path data-source="dispatch" data-target="ras-update" d="M500 210H440V1140H260V1170" marker-end="url(#control-arrow)"/>
+    <path data-source="dispatch" data-target="btb-return-learn" d="M440 1120H340V1080" marker-end="url(#control-arrow)"/>
+    <path data-source="retirement" data-target="free-list" d="M830 515V620H820" marker-end="url(#control-arrow)"/>
+    <path data-source="retirement" data-target="csr-write" d="M830 620V740H740V770" marker-end="url(#control-arrow)"/>
+    <path data-source="retirement" data-target="lsq-retire" d="M2300 315V770" marker-end="url(#control-arrow)"/>
+    <path data-source="trap-state" data-target="csr-trap-mret" d="M750 970V880" marker-end="url(#control-arrow)"/>
+    <path data-source="csr-targets" data-target="trap-target" d="M560 880V970" marker-end="url(#control-arrow)"/>
+    <path data-source="accepted-cdb" data-target="lsq-store-data" d="M1235 1825V1930H2320V880" stroke-width="2.6" marker-end="url(#control-arrow)"/>
+  </g>
+  <g fill="#111111">
+    <circle cx="440" cy="1120" r="3"/>
+    <circle cx="830" cy="515" r="3"/>
+    <circle cx="830" cy="620" r="3"/>
+    <circle cx="2300" cy="315" r="3"/>
+    <circle cx="1235" cy="1825" r="3"/>
+  </g>
+  <g style="font-family:Helvetica,Arial,sans-serif;font-size:10.5px;fill:#1b1b1b;paint-order:stroke;stroke:#ffffff;stroke-width:3.5px;stroke-linejoin:round">
+    <text x="1530" y="193" text-anchor="middle">dispatch: lq_alloc_fire / sq_alloc_fire + renamed metadata</text>
+    <text x="2170" y="630" text-anchor="middle" transform="rotate(-90 2170 630)">load / store allocation</text>
+    <text x="271" y="1156">bundle_fire: RAS pop / push(pc + 4)</text>
+    <text x="438" y="1113" text-anchor="end">bp_return_update_valid / pc</text>
+    <text x="802" y="724" text-anchor="end">slot 0 CSR commit: we / waddr / wdata</text>
+    <text x="2290" y="570" text-anchor="middle" transform="rotate(-90 2290 570)">commit_fire[1:0], commit_is_load / commit_is_store</text>
+    <text x="548" y="933" text-anchor="end">mtvec / mepc</text>
+    <text x="738" y="947" text-anchor="end">trap_we / mret_we + pc / cause / tval</text>
+    <text x="1780" y="1918" text-anchor="middle">sq_data_wb_fire[1:0], sq_data_wb_pdst, sq_data_wb_value (ROB-accepted writeback)</text>
+  </g>
 </svg>
