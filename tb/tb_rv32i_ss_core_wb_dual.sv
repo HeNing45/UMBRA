@@ -698,7 +698,7 @@ module tb_rv32i_ss_core_wb_dual;
         $fatal(1, "D5: expected 2 commits, commit_order=%0d", `ROB.commit_order_q);
     end
     @(posedge clk); #1;
-    check_word("D5 architectural CSR write landed (mepc)", `CSRF.mepc_q, 32'h5A5A_0123);
+    check_word("D5 architectural CSR write landed (aligned mepc)", `CSRF.mepc_q, 32'h5A5A_0120);
     check_word("D5 CSR rd got old mepc (0)", `PRF.regs_q[pd_csr], 32'h0000_0000);
     check_bit ("D5 mul rd ready", `PRF.ready_q[pd_mul], 1'b1);
 

@@ -67,6 +67,45 @@ module tb_rv32i_ss_core_t36_natural;
   bit csr_lane1_seen, refill_commit_seen;
   word_t selected_target_seen, marker_value;
   int checks, scenarios;
+  bit count_read_effects = 1'b0;
+  int read_effects, counter_reads, recovery_read_accepts;
+  int memory_cycle, response_head, response_tail;
+  int response_due[16];
+  word_t response_value[16];
+
+  // A read-counting memory model makes duplicate external traffic observable
+  // in a later committed load. Responses retain acceptance order and are delayed.
+  always @(posedge clk) begin
+    if (rst_n && count_read_effects) begin
+      memory_cycle = memory_cycle + 1;
+      dmem_rvalid <= 1'b0;
+      if (response_head < response_tail &&
+          response_due[response_head % 16] <= memory_cycle) begin
+        dmem_rvalid <= 1'b1;
+        dmem_rdata <= response_value[response_head % 16];
+        response_head = response_head + 1;
+      end
+      if (dmem_valid && dmem_ready && !dmem_we) begin
+        if (response_tail - response_head >= 16)
+          $fatal(1, "read-counting memory response queue overflow");
+        response_due[response_tail % 16] = memory_cycle + 6;
+        if (dmem_addr == 32'h400) begin
+          read_effects = read_effects + 1;
+          response_value[response_tail % 16] = 32'h1234;
+          if (u_core.branch_recover_req)
+            recovery_read_accepts = recovery_read_accepts + 1;
+        end else if (dmem_addr == 32'h404) begin
+          counter_reads = counter_reads + 1;
+          response_value[response_tail % 16] = word_t'(read_effects);
+        end else begin
+          $fatal(1, "unexpected read-counting memory address %08h", dmem_addr);
+        end
+        response_tail = response_tail + 1;
+      end
+      if (dmem_valid && dmem_ready && dmem_we)
+        $fatal(1, "unexpected store in held-read recovery program");
+    end
+  end
 
   rv32i_ss_imem_zero_latency_adapter u_imem_adapter (
     .imem_req_valid(imem_req_valid), .imem_req_ready(imem_req_ready),
@@ -488,11 +527,11 @@ module tb_rv32i_ss_core_t36_natural;
     repeat (2) @(posedge clk);
     check("CSR lane1 event observed", csr_lane1_seen);
     check("CSR serialization held younger fetch", csr_stall_cycles > 0);
-    check("architectural mepc updated", u_core.u_csr_file.mepc_q == 32'h55);
+    check("architectural mepc applies IALIGN=32", u_core.u_csr_file.mepc_q == 32'h54);
     check_arch("csrrw returns old mepc", 3, 32'd0);
     check_arch("dependent after csrrw", 4, 32'd1);
-    check_arch("csrrs reads new mepc", 5, 32'h55);
-    check_arch("dependent after csrrs", 6, 32'h56);
+    check_arch("csrrs reads aligned mepc", 5, 32'h54);
+    check_arch("dependent after csrrs", 6, 32'h55);
     check("free-list conserved after CSR interleave", free_count_now() == 32);
     $display("TRACE N3 committed mepc=%08h x3=%0d x4=%0d x5=%0d x6=%0d free=%0d",
              u_core.u_csr_file.mepc_q,
@@ -505,6 +544,45 @@ module tb_rv32i_ss_core_t36_natural;
 
     if (scenarios != 3)
       $fatal(1, "NATURAL scenario count got=%0d exp=3", scenarios);
+    // An older load is held while an independent DIV delays a younger branch.
+    // Accept the load on natural branch recovery, then read the external
+    // acceptance counter. A duplicate read changes committed x7 and the marker.
+    fill_nops();
+    imem[0]  = 32'h4000_0093; // addi x1,x0,0x400
+    imem[1]  = 32'h0000_a283; // lw x5,0(x1)
+    imem[2]  = 32'h0070_0113; // addi x2,x0,7
+    imem[3]  = 32'h0030_0193; // addi x3,x0,3
+    imem[4]  = 32'h0231_4333; // div x6,x2,x3
+    imem[5]  = 32'h0263_0663; // beq x6,x6,+44 -> 0x40
+    imem[6]  = 32'h0630_0413; // wrong path: addi x8,x0,99
+    imem[16] = 32'h0040_a383; // lw x7,4(x1): accepted-read counter
+    imem[17] = 32'h05d3_8f93; // addi x31,x7,93: must commit 94
+    imem[18] = 32'h0000_006f; // spin
+    reset_dut();
+    dmem_ready = 1'b0;
+    read_effects = 0; counter_reads = 0; recovery_read_accepts = 0;
+    memory_cycle = 0; response_head = 0; response_tail = 0;
+    count_read_effects = 1'b1;
+    wait_i = 0;
+    while (!u_core.branch_recover_req && wait_i < 500) begin
+      @(negedge clk); wait_i++;
+    end
+    check("natural recovery overlaps the held older read",
+          u_core.branch_recover_req && u_core.u_lsq.dreq_held_q &&
+          dmem_valid && !dmem_we && dmem_addr == 32'h400);
+    check("held read is older than recovering branch",
+          rob_idx_t'(u_core.u_lsq.dreq_load_entry_q.rob_idx - u_core.rob_head_idx) <
+          rob_idx_t'(u_core.recover_q_rob_idx - u_core.rob_head_idx));
+    dmem_ready = 1'b1;
+    wait_marker(32'd94, 1200);
+    check_arch("held load commits its response", 5, 32'h1234);
+    check_arch("later load observes exactly one accepted read", 7, 32'd1);
+    check_arch("wrong-path register write is killed", 8, 32'd0);
+    check("exactly one read accepted on recovery edge",
+          recovery_read_accepts == 1 && read_effects == 1 && counter_reads == 1);
+    count_read_effects = 1'b0;
+    scenarios++;
+
     $display("[tb_rv32i_ss_core_t36_natural] PASS checks=%0d (scenarios=%0d)", checks, scenarios);
     $finish;
   end

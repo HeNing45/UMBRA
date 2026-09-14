@@ -1105,6 +1105,15 @@ module rv32i_ss_lsq (
                         if (lq_recover_kill[lq_recover_apply_i]) begin
                             lq_metadata_q[lq_recover_apply_i] <= '0;
                             lq_executed_q[lq_recover_apply_i] <= 1'b0;
+                        end else if (lq_launch_held && unexec_held_match &&
+                                     !lq_held_slot_changes_hands &&
+                                     (dreq_load_idx_q == lq_idx_t'(lq_recover_apply_i))) begin
+                            // A presented request may be accepted during recovery.
+                            // Compose that irreversible acceptance into the surviving
+                            // owner's issue state, or it will launch again afterwards.
+                            // Kill wins above; identity and ownership guards exclude
+                            // a retired/reused row. Response data still uses its snapshot.
+                            lq_executed_q[lq_recover_apply_i] <= 1'b1;
                         end
             end
             for (sq_recover_apply_i = 0; sq_recover_apply_i < SS_SQ_DEPTH;

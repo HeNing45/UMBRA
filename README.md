@@ -9,8 +9,8 @@
   <a href="rtl_superscalar/">RTL</a> ·
   <a href="tb/">Testbenches</a> ·
   <a href="docs/IMPLEMENTATION.md">Implementation</a> ·
-  <a href="sw/README.md">Benchmarks</a> ·
-  <a href="https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns">GDS release</a>
+  <a href="#benchmarks">Benchmarks</a> ·
+  <a href="https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns-corrected">GDS release</a>
 </p>
 
 ## UMBRA — a two-wide out-of-order RISC-V processor
@@ -92,8 +92,8 @@ architecture conformance are outside the implemented scope.
 | --- | --- | --- |
 | Target | Kintex UltraScale+ KU5P | FreePDK45 / OSU gscl45nm |
 | Clock | **100 MHz / 10 ns** | **50 MHz / 20 ns** |
-| Setup slack | **+0.601 ns** | **+4.363652 ns** |
-| Hold slack | **+0.012 ns** | **+0.000970 ns** |
+| Setup slack | **+0.446 ns** | **+3.943214 ns** |
+| Hold slack | **+0.012 ns** | **+0.000031 ns** |
 | Measurement | Vivado out-of-context routing | StarRC extraction + PrimeTime |
 
 The FPGA timing covers the CPU block only. External memory, full clock-network
@@ -105,16 +105,12 @@ setup/hold endpoints, zero routing DRCs and zero open nets. Calibre and
 IC Validator each reported **zero findings across 167 DRC checks**, with
 **LVS CORRECT** and **LVS PASS**, respectively, on the same GDS.
 
-**[Download the GDS](https://github.com/HeNing45/UMBRA/releases/download/physical-osu45-20ns/umbra_syn_island.gds)**
+**[Download the GDS](https://github.com/HeNing45/UMBRA/releases/download/physical-osu45-20ns-corrected/umbra_syn_island.gds)**
 · [KLayout layer file](physical/umbra_syn_island.lyp)
-· [Release and notices](https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns)
+· [Release and notices](https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns-corrected)
 · [Implementation notes](docs/IMPLEMENTATION.md)
 
-Separately, an **unplaced** Design Compiler/PrimeTime sweep passed at a
-2.40 ns target (about 417 MHz); 2.35 ns failed. This is a wire-load-model
-synthesis result, not the operating clock of either routed implementation.
-
-## Verification and benchmarks
+## Verification
 
 The repository includes 66 superscalar testbench sources, shared memory and
 trace helpers, Spike comparison support, and CoreMark and Embench ports.
@@ -126,16 +122,34 @@ trace helpers, Spike comparison support, and CoreMark and Embench ports.
 | [CoreMark](sw/coremark/README.md) | Performance and validation seeds passed the expected CRC checks |
 | [Embench-IoT](sw/embench/) | All 19 programs completed with successful return values |
 
-The delayed-memory CoreMark sample measured **3.2029 iterations per million
-cycles** with the `max` compiler profile. It was a 16-iteration RTL run,
-not a qualifying ten-second CoreMark score or a hardware measurement.
+## Benchmarks
 
-The Embench rerun measured **1.217/MHz** across 19 programs. At the FPGA's
-100 MHz clock, its combined timed sections project to **652.8 ms**, assuming
-the same memory behavior. This is a simulation projection, not an on-board
-benchmark. The run used GCC 15.2.0 at `-O2`, one-cycle instruction/data responses,
-pipelined instruction fetch and two outstanding data reads. XGBoost's upstream
+Measured on the corrected RTL with GCC 15.2.0 and the same delayed-memory
+configuration for both compiler profiles.
+
+| Benchmark | `-O2` | `max` |
+| --- | ---: | ---: |
+| CoreMark — iterations per million timed cycles | 2.7743 | **3.2029** |
+| Embench-IoT — geometric-mean relative speed per MHz, 19 programs | 1.217 | **1.488** |
+| Embench combined timed sections — projected at 100 MHz | 652.8 ms | **560.7 ms** |
+
+`max` uses `-O3`, full loop unrolling, an inline limit of 1000, and 8-byte
+function, jump and loop alignment. Both runs use one-cycle instruction/data
+responses, pipelined instruction fetch and two outstanding data reads.
+
+These are **RTL simulation results, not on-board measurements**. The 100 MHz
+projection assumes the same memory behavior. CoreMark passed its CRC checks
+over 16 iterations, but the run is shorter than the qualifying ten-second
+interval. All 19 Embench programs returned success; XGBoost's upstream
 self-check is weak at the default scale factor.
+
+```sh
+make coremark MEMORY=delayed PROFILE=max MODE=performance ITERATIONS=16
+make coremark MEMORY=delayed PROFILE=max MODE=validation ITERATIONS=1
+make embench MEMORY=delayed PROFILE=max BENCH=all
+```
+
+Use `PROFILE=o2` to reproduce the comparison column.
 
 [Build and run checks](docs/IMPLEMENTATION.md#running-checks) ·
 [Software and benchmark ports](sw/README.md) ·
@@ -146,7 +160,7 @@ self-check is weak at the default scale factor.
 
 This is an academic implementation, not foundry signoff. The sub-picosecond
 ASIC hold margin is not a robustness margin. Changed intracell metal was not
-recharacterized, and 100,517 zero-limit capacitance entries remain unresolved
+recharacterized, and 101,234 zero-limit capacitance entries remain unresolved
 in the model. Some timing-check classes are untested; multi-corner analysis,
 IR-drop, electromigration, packaging and silicon qualification are not covered.
 

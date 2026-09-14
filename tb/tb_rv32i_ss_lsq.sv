@@ -100,6 +100,13 @@ module tb_rv32i_ss_lsq;
   int errors = 0;
   int checks = 0;
   int i;
+  bit count_recovery_reads = 1'b0;
+  int recovery_reads = 0;
+  int surviving_held_cases = 0;
+  always @(posedge clk) begin
+    if (rst_n && count_recovery_reads && dmem_valid && dmem_ready && !dmem_we)
+      recovery_reads = recovery_reads + 1;
+  end
 
   rv32i_ss_lsq dut (
     .clk                   (clk),
@@ -193,6 +200,66 @@ module tb_rv32i_ss_lsq;
     branch_recover_req = 1'b0; recover_rob_idx = '0; rob_head_idx = '0;
     trap_flush = 1'b0; dmem_ready = 1'b1; dmem_rvalid = 1'b1; dmem_rdata = '0;
     cdb_grant_lq = 1'b0;
+  endtask
+
+  // A live read accepted during recovery must consume its issue opportunity
+  // exactly once. Count external acceptances, not the DUT's executed flag.
+  task automatic surviving_held_read(input rob_idx_t head,
+                                     input bit immediate_response,
+                                     input int recovery_cycles);
+    lq_idx_t ticket;
+    lq_entry_t row;
+    flush_all();
+    @(negedge clk);
+    dmem_ready = 1'b0; dmem_rvalid = 1'b0;
+    cdb_grant_lq = 1'b0; rob_head_idx = head;
+    recovery_reads = 0; count_recovery_reads = 1'b1;
+    lq_alloc_one(head, phys_reg_t'(51), MEM_W, ticket, rob_seq_t'(123));
+    lq_dep(ticket, 32'h0000_0400, 1'b0);
+    repeat (2) @(negedge clk);
+    #1;
+    check("survivor setup: stalled request is held",
+          dmem_valid && !dmem_we && !dmem_ready && dut.dreq_held_q);
+    @(negedge clk);
+    branch_recover_req = 1'b1;
+    recover_rob_idx = head + rob_idx_t'(2);
+    dmem_ready = 1'b1;
+    dmem_rvalid = immediate_response;
+    dmem_rdata = 32'h7100_0123;
+    #1;
+    check("survivor setup: acceptance overlaps recovery",
+          branch_recover_req && dut.lq_launch_held &&
+          dmem_valid && dmem_ready && !dmem_we);
+    @(posedge clk); @(negedge clk);
+    dmem_rvalid = 1'b0;
+    repeat (recovery_cycles - 1) @(negedge clk);
+    branch_recover_req = 1'b0;
+    repeat (3) @(negedge clk);
+    if (recovery_reads != 1)
+      $fatal(1, "surviving held read accepted %0d times, expected exactly one", recovery_reads);
+    check("surviving held read accepted exactly once", recovery_reads == 1);
+    row = dut.lq_entry_q[ticket];
+    check("surviving accepted owner remains live and issued",
+          row.valid && row.executed && row.rob_seq == rob_seq_t'(123));
+    if (!immediate_response) begin
+      dmem_rvalid = 1'b1;
+      @(posedge clk); @(negedge clk);
+      dmem_rvalid = 1'b0;
+    end
+    #1;
+    check("survivor completion preserves accepted identity and value",
+          lq_complete.valid && lq_complete.rob_idx == head &&
+          lq_complete.rob_seq == rob_seq_t'(123) &&
+          lq_complete.pdst == phys_reg_t'(51) &&
+          lq_complete.result == 32'h7100_0123);
+    cdb_grant_lq = 1'b1;
+    @(posedge clk); @(negedge clk);
+    cdb_grant_lq = 1'b0;
+    commit_one(head, 1'b0);
+    repeat (2) @(negedge clk);
+    check("retired survivor cannot reissue", recovery_reads == 1 && !dmem_valid);
+    count_recovery_reads = 1'b0;
+    surviving_held_cases++;
   endtask
 
   // one-cycle LQ allocation; ticket sampled just before the edge
@@ -395,9 +462,11 @@ module tb_rv32i_ss_lsq;
     // DUT's own contract pin must trip. Reaching the TB_RED_FAIL line means
     // the pin is missing or too weak.
     if ($test$plusargs("red_lsq_pop_empty")) begin
-      // Command an LQ pop with an empty queue. Under the pop is a COMMAND
-      // (no occupancy qualifier), so the occupancy/validity pin must catch it.
+      // Isolate the invalid-row pin from the independent occupancy pin.
+      // Deliberately inconsistent count is fault injection, not a legal state.
+      force dut.lq_count_q = 1;
       commit_one(rob_idx_t'(0), 1'b0);
+      release dut.lq_count_q;
       $display("TB_RED_FAIL: LQ pop on an empty queue did not trip");
       $finish;
     end
@@ -411,6 +480,11 @@ module tb_rv32i_ss_lsq;
       sq_alloc_one(rob_idx_t'(1), sq_t);
       sq_dep(sq_idx_t'(0), 32'h0000_0040, 4'b1111, 1'b0);
       sq_dep(sq_idx_t'(1), 32'h0000_0044, 4'b1111, 1'b0);
+      // Keep the accepting head's correspondence legal while injecting the
+      // illegal two-store retirement group. Otherwise a second pin masks a
+      // missing one-store assertion in the counterfactual run.
+      m4_want_override = 1'b1;
+      m4_want = 2'b01;
       commit_pair(rob_idx_t'(0), 1'b1, 1'b0, 1'b1, 1'b0);
       $display("TB_RED_FAIL: two stores in one commit group did not trip");
       $finish;
@@ -1859,12 +1933,15 @@ module tb_rv32i_ss_lsq;
       check("M4.3 killed held load stays presented (no withdrawal)",
             dmem_valid === 1'b1);
     end
-    branch_recover_req = 1'b0;
-    @(negedge clk);
-    dmem_ready = 1'b1;                           // acceptance of the dead load
+    // Acceptance while recovery is still asserted must not revive the row.
+    dmem_ready = 1'b1;
     @(posedge clk);
     m4_held_launches = m4_held_launches + 1;
     @(negedge clk);
+    le = dut.lq_entry_q[m4_lq_ticket];
+    check("killed held acceptance during recovery cannot revive its row",
+          !le.valid && !le.executed);
+    branch_recover_req = 1'b0;
     dmem_rvalid = 1'b1; dmem_rdata = 32'h5151_5151;
     @(posedge clk); @(negedge clk); #1;
     dmem_rvalid = 1'b0;
@@ -1986,7 +2063,12 @@ module tb_rv32i_ss_lsq;
           (dut.lq_select_entry.rob_idx == rob_idx_t'(31)));
     check("M4.6 killed held load still presented (no withdrawal)",
           dmem_valid && (dmem_addr == 32'h0000_0180));
-    // Acceptance and response on the SAME edge.
+    // A second recovery preserves the new owner across ROB wraparound.
+    // The old held request still cannot mark that reused row as executed.
+    branch_recover_req = 1'b1;
+    recover_rob_idx = rob_idx_t'(0);
+    rob_head_idx = rob_idx_t'(31);
+    // Acceptance and response on the SAME recovery edge.
     dmem_ready = 1'b1; dmem_rvalid = 1'b1; dmem_rdata = 32'h9A9A_9A9A;
     #1;
     check("M4.6 held launch presented with a same-cycle response",
@@ -1995,6 +2077,7 @@ module tb_rv32i_ss_lsq;
     @(posedge clk);
     @(negedge clk); #1;
     dmem_ready = 1'b0; dmem_rvalid = 1'b0;
+    branch_recover_req = 1'b0;
     check("M4.6 same-cycle response never raised the outstanding register",
           dut.lq_out_count_q === 2'd0);
     check("M4.6 completion carries the HELD SNAPSHOT identity, not the select",
@@ -2318,6 +2401,16 @@ module tb_rv32i_ss_lsq;
       le = dut.lq_entry_q[lq_t];
       check("F2 committed pop clears the whole logical entry", le === '0);
     end
+
+    for (int wrap_case = 0; wrap_case < 2; wrap_case++) begin
+      for (int response_case = 0; response_case < 2; response_case++) begin
+        surviving_held_read(rob_idx_t'(wrap_case ? 30 : 10),
+                            response_case != 0, 1);
+        surviving_held_read(rob_idx_t'(wrap_case ? 30 : 10),
+                            response_case != 0, 3);
+      end
+    end
+    check("all held-survivor timing and wrap cases entered", surviving_held_cases == 8);
 
     // ---entry proofs ------------------------------------------------
     check("M5 entered: two reads outstanding", m5_two_outstanding >= 1);

@@ -375,6 +375,32 @@ module tb_rv32i_ss_core_trap;
     check_word("T7: muldiv killed by trap", word_t'(dut.muldiv_busy), 32'd0);
     post_trap_addi(32'h0000_7008, 12, 32'h0000_00CC);
 
+    // Fixed IALIGN=32 applies to explicit CSR reads and the implicit MRET
+    // read. Every low-bit pattern must select the same aligned return PC.
+    for (int low = 0; low < 4; low++) begin
+      reset_dut();
+      disp_addi(32'h100, 1, 0, word_t'(32'h180 + low));
+      disp_csr(32'h104, CSR_RW, 12'h341, 3, 1);
+      drain();
+      disp_csr(32'h108, rv32i_pipeline_pkg::CSR_RS, 12'h341, 5, 0);
+      drain();
+      check_word("mepc write returns old value", creg(3), 32'd0);
+      check_word("mepc CSR read masks both alignment bits", creg(5), 32'h180);
+      check_word("mepc stored value is word aligned", dut.u_csr_file.mepc_q, 32'h180);
+      disp_trap(32'h10c, 32'd0, 32'd0, 1'b1);
+      wait_trap();
+      check_word("MRET uses aligned mepc", redir_target_cap, 32'h180);
+      post_trap_addi(redir_target_cap, 20, word_t'(32'h70 + low));
+
+      // Exercise the trap-write port's WARL behavior independently of the
+      // frontend, which normally supplies an already aligned instruction PC.
+      disp_trap(word_t'(32'h240 + low), 32'd11, 32'd0, 1'b0);
+      wait_trap();
+      disp_csr(32'h300, rv32i_pipeline_pkg::CSR_RS, 12'h341, 6, 0);
+      drain();
+      check_word("trap-captured mepc masks alignment bits", creg(6), 32'h240);
+    end
+
     if (errors == 0) begin
       $display("[tb_rv32i_ss_core_trap] PASS checks=%0d", checks);
       $finish;

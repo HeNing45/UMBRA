@@ -40,24 +40,43 @@ benchmark scores. The directed superscalar suite passed 60 of 61 tests;
 
 ## Physical layout
 
-[Download the GDS](https://github.com/HeNing45/UMBRA/releases/download/physical-osu45-20ns/umbra_syn_island.gds)
+[Download the GDS](https://github.com/HeNing45/UMBRA/releases/download/physical-osu45-20ns-corrected/umbra_syn_island.gds)
 and [KLayout layer file](../physical/umbra_syn_island.lyp).
-The GDS is distributed through the [physical release](https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns),
+The GDS is distributed through the [physical release](https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns-corrected),
 which also includes the license and third-party notices.
 
 In KLayout, open the GDS, select `umbra_syn_island`, and load the layer file.
 
+The corrected implementation meets 20 ns / 50 MHz with extracted setup slack
++3.943214 ns, hold slack +0.000031 ns and zero hold violators. Calibre and IC
+Validator each report zero results across 167 DRC checks; both LVS comparisons
+pass. Their shared VSS-label diagnostic describes seven intentionally grounded
+output ports, not an unintended short. This is an academic-model result,
+not foundry signoff; the hold margin is only 31 fs.
+
 ## FPGA and benchmark results
 
 The KU5P core meets **100 MHz** in routed, out-of-context Vivado timing
-(setup +0.601 ns, hold +0.012 ns). External memory, full clock-network integration
+(setup +0.446 ns, hold +0.012 ns). External memory, full clock-network integration
 and on-board execution are not included.
 
-The Embench rerun scores **1.217/MHz** across 19 programs, using GCC 15.2.0
-at `-O2`, one-cycle instruction/data responses, pipelined instruction fetch
-and two outstanding data reads. Its combined timed sections would take
-**652.8 ms at 100 MHz**, assuming the same cycle counts and memory behavior.
+The routed run has zero failing setup/hold endpoints and zero routing errors.
+Vivado retains 17 warnings: 16 DSP pipelining recommendations and one net
+without routable loads. OOC boundary ports have no physical pin locations;
+this result does not qualify external I/O timing or a board implementation.
+
+The Embench rerun scores **1.488/MHz** with `max`, versus **1.217/MHz** at
+`-O2`, across the same 19 programs. Both use GCC 15.2.0, one-cycle
+instruction/data responses, pipelined instruction fetch and two outstanding
+data reads. The `max` combined timed sections would take **560.7 ms at 100 MHz**
+(652.8 ms at `-O2`), assuming the same cycle counts and memory behavior.
 This is a simulation projection, not an FPGA benchmark measurement.
+
+The corrected RTL also passes CoreMark performance and validation CRC checks.
+The 16-iteration `max` sample takes 4,995,442 timed cycles, or **3.2029 iterations
+per million timed cycles**. The `-O2` comparison takes 5,767,311 timed cycles
+and scores **2.7743**. The run is shorter than ten seconds and is not a
+qualifying CoreMark score. These results use the delayed-memory profile below.
 
 ## Running checks
 
@@ -68,10 +87,17 @@ require RISC-V GCC/binutils; Spike is installed separately. Run from the repo ro
 make lint
 make test TB=tb_rv32i_ss_iq
 make spike
-make coremark MODE=performance ITERATIONS=1
-make coremark MODE=validation ITERATIONS=1
-make embench BENCH=crc32
+make coremark MEMORY=delayed PROFILE=max MODE=performance ITERATIONS=16
+make coremark MEMORY=delayed PROFILE=max MODE=validation ITERATIONS=1
+make embench MEMORY=delayed PROFILE=max BENCH=all
 ```
 
 `make test` runs one selected testbench. Use `CROSS=` to override the
 `riscv-none-elf-` toolchain prefix and `TIMEOUT=` to change the simulation limit.
+Benchmark builds default to `MEMORY=zero`; `MEMORY=delayed` selects one-cycle
+pipelined instruction responses and one-cycle data responses with two
+outstanding reads. Each profile has a separate simulator build directory.
+
+`PROFILE=o2` is the default compiler setting. `PROFILE=max` uses `-O3`,
+`-funroll-all-loops`, `-finline-limit=1000`, and 8-byte function, jump and loop
+alignment. Benchmark outputs are separated by memory and compiler profile.

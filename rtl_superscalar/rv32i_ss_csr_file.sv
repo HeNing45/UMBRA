@@ -98,7 +98,9 @@ module rv32i_ss_csr_file
       // These are mutually exclusive by construction at the commit boundary;
       // the priority ordering remains defensive.
       if (trap_we) begin
-        mepc_q  <= trap_pc;
+        // RV32IM has fixed IALIGN=32; both low mepc bits are hardwired zero.
+        // Store the WARL value so CSR reads and the implicit MRET read agree.
+        mepc_q  <= {trap_pc[31:2], 2'b00};
         mcause_q <= trap_cause;
         mstatus_q[MPIE_BIT] <= mstatus_q[MIE_BIT];
         mstatus_q[MIE_BIT]  <= 1'b0;
@@ -112,7 +114,7 @@ module rv32i_ss_csr_file
         unique case (waddr)
           CSR_MSTATUS: mstatus_q <= mstatus_warl(wdata);
           CSR_MTVEC:   mtvec_q   <= wdata;
-          CSR_MEPC:    mepc_q    <= wdata;
+          CSR_MEPC:    mepc_q    <= {wdata[31:2], 2'b00};
           CSR_MCAUSE:  mcause_q  <= wdata;
           CSR_MTVAL:   mtval_q   <= wdata;
           default: begin
