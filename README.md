@@ -13,6 +13,10 @@
   <a href="https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns-corrected">GDS release</a>
 </p>
 
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License: Apache 2.0"/></a>
+</p>
+
 ## UMBRA — a two-wide out-of-order RISC-V processor
 
 UMBRA is an RV32IM processor written in SystemVerilog, with register renaming,
