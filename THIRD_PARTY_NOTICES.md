@@ -1,7 +1,7 @@
-# Third party notices
+# Third-party notices
 
 UMBRA's original code uses the [Apache License 2.0](https://github.com/HeNing45/UMBRA/blob/main/LICENSE).
-Third party files keep their own licenses and copyright notices.
+Third-party files keep their own licenses and copyright notices.
 
 - **CoreMark:** from [EEMBC](https://github.com/eembc/coremark).
   See the included [license and usage terms](sw/coremark/upstream/LICENSE.md).

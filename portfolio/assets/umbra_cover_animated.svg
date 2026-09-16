@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 540" role="img" aria-labelledby="title description">
-  <title id="title">UMBRA: a two wide out of order RISC-V processor</title>
-  <desc id="description">A two wide, out of order RV32IM processor. 100 MHz FPGA out of context core timing; 50 MHz academic ASIC implementation; DRC and LVS checked with Calibre and IC Validator. The gold eclipse starts with the processor visible. Simplified arrows connect fetch, rename, scheduling, register read, ALUs, multiply/divide, address generation, the load/store queue and writeback. Recovery and most control wiring are omitted; the branch connection represents support in both ALUs. An architectural illustration, not a chip-layout image.</desc>
+  <title id="title">UMBRA: a 2-wide out-of-order RISC-V processor</title>
+  <desc id="description">A 2-wide, out-of-order RV32IM processor. 100 MHz FPGA out-of-context core timing; 50 MHz academic ASIC implementation; DRC and LVS checked with Calibre and IC Validator. The gold eclipse starts with the processor visible. Simplified arrows connect fetch, rename, scheduling, register read, ALUs, multiply/divide, address generation, the load/store queue and writeback. Recovery and most control wiring are omitted; the branch connection represents support in both ALUs. An architectural illustration, not a chip-layout image.</desc>
   <defs>
     <linearGradient id="background" x2="1" y2="1">
       <stop stop-color="#101722"/><stop offset=".55" stop-color="#090e16"/><stop offset="1" stop-color="#0e131a"/>
@@ -75,7 +75,7 @@
     <text x="74" y="67" class="mono muted" font-size="14" letter-spacing="2.3">RISC-V / RTL TO PHYSICAL IMPLEMENTATION</text>
     <path d="M74 94H114" stroke="#e7c18a" stroke-width="2"/>
     <text x="65" y="251" fill="#f3f0e7" font-size="146" font-weight="500" letter-spacing="8">UMBRA</text>
-    <text x="74" y="309" fill="#d0d7df" font-size="27" font-weight="300">A two wide, out of order RISC-V processor.</text>
+    <text x="74" y="309" fill="#d0d7df" font-size="27" font-weight="300">A 2-wide, out-of-order RISC-V processor.</text>
     <text x="75" y="348" class="muted" font-size="20">RV32IM in SystemVerilog. From RTL to layout.</text>
 
     <g transform="translate(74 426)">
