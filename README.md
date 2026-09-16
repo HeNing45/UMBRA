@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
     <source media="(prefers-reduced-motion: reduce)" srcset="portfolio/assets/umbra_cover_animated_preview.png"/>
-    <img src="portfolio/assets/umbra_cover_animated.svg" alt="UMBRA — a two-wide out-of-order RV32IM processor. 100 MHz FPGA core timing; 50 MHz academic ASIC implementation." width="100%"/>
+    <img src="portfolio/assets/umbra_cover_animated.svg" alt="UMBRA: a two wide out of order RV32IM processor. 100 MHz FPGA core timing; 50 MHz academic ASIC implementation." width="100%"/>
   </picture>
 </p>
 
@@ -17,16 +17,16 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License: Apache 2.0"/></a>
 </p>
 
-## UMBRA — a two-wide out-of-order RISC-V processor
+## UMBRA: a two wide out of order RISC-V processor
 
 UMBRA is an RV32IM processor written in SystemVerilog, with register renaming,
-out-of-order execution and two-wide, in-order retirement. The repository
-includes the RTL, superscalar testbenches, bare-metal benchmarks and physical
-layout, alongside the earlier single-cycle, pipelined and scalar out-of-order cores.
+out of order execution and two wide, in order retirement. The repository
+includes the RTL, superscalar testbenches, bare metal benchmarks and physical
+layout, alongside the earlier single cycle, pipelined and scalar out of order cores.
 
 Implementation results include **100 MHz routed FPGA core timing** and a
 **50 MHz ASIC layout**, with the released GDS checked by both Calibre and IC Validator.
-The FPGA result is out-of-context timing on a KU5P, not a board-level result;
+The FPGA result is out of context timing on a KU5P, not a board level result;
 the ASIC is an academic FreePDK45 / OSU gscl45nm implementation, not fabricated
 silicon.
 
@@ -37,17 +37,17 @@ datapath to the superscalar implementation.
 
 | Design | What it adds | Source |
 | --- | --- | --- |
-| Single-cycle RV32I | The starting point: fetch, decode and execute in one cycle | [rtl/](rtl/) |
-| Five-stage RV32IM pipeline | Overlapping instructions, forwarding, hazards and branch redirects | [rtl_p/](rtl_p/) |
-| Scalar out-of-order | Register renaming, dynamic scheduling and ordered retirement | [rtl_ooo/](rtl_ooo/) |
-| Two-wide out-of-order | Dual issue and retirement, two ALUs and a load/store queue | [rtl_superscalar/](rtl_superscalar/) |
+| Single cycle RV32I | The starting point: fetch, decode and execute in one cycle | [rtl/](rtl/) |
+| Five stage RV32IM pipeline | Overlapping instructions, forwarding, hazards and branch redirects | [rtl_p/](rtl_p/) |
+| Scalar out of order | Register renaming, dynamic scheduling and ordered retirement | [rtl_ooo/](rtl_ooo/) |
+| Two wide out of order | Dual issue and retirement, two ALUs and a load/store queue | [rtl_superscalar/](rtl_superscalar/) |
 
 ## Inside the superscalar core
 
-The core has a 32-entry reorder buffer, 64 physical registers, a unified
-16-entry issue queue and eight branch checkpoints. Two ALUs, a multiply/divide
-unit and a dedicated address-generation unit feed two writeback lanes.
-Eight-entry load and store queues manage memory operations, while retirement
+The core has a 32 entry reorder buffer, 64 physical registers, a unified
+16 entry issue queue and eight branch checkpoints. Two ALUs, a multiply/divide
+unit and a dedicated address generation unit feed two writeback lanes.
+Eight entry load and store queues manage memory operations, while retirement
 stays in program order. Registered selection and operand boundaries separate
 scheduling from execution.
 
@@ -64,13 +64,13 @@ scheduling from execution.
 
 ![UMBRA frontend, rename, scheduling, execution and memory](portfolio/assets/umbra_architecture.svg)
 
-[Open the full-size schematic](portfolio/assets/umbra_architecture.svg)
+[Open the full size schematic](portfolio/assets/umbra_architecture.svg)
 
 </details>
 
 ### Instruction set
 
-**RV32IM, with CSR instructions and partial machine-mode support.** The `M`
+**RV32IM, with CSR instructions and partial machine mode support.** The `M`
 multiply/divide extension is separate from machine privilege mode.
 
 | Area | Implemented support |
@@ -78,11 +78,11 @@ multiply/divide extension is separate from machine privilege mode.
 | Integer | Arithmetic, logic, shifts and comparisons; upper immediates; branches and jumps; byte, halfword and word loads/stores |
 | Multiply/divide | `MUL`, `MULH`, `MULHSU`, `MULHU`, `DIV`, `DIVU`, `REM`, `REMU` |
 | CSR instructions | Read/write, set and clear operations, including immediate forms |
-| Machine state | `mstatus`, `mtvec`, `mepc`, `mcause`, `mtval`, direct-mode trap entry and `MRET` |
+| Machine state | `mstatus`, `mtvec`, `mepc`, `mcause`, `mtval`, direct mode trap entry and `MRET` |
 | Precise exceptions | `ECALL`, `EBREAK`, illegal instructions and misaligned instruction targets or data accesses |
 
 There are no interrupts, supervisor/user modes, MMU, PMP, compressed, atomic
-or floating-point extensions. Unsupported CSRs read as zero and ignore writes.
+or floating point extensions. Unsupported CSRs read as zero and ignore writes.
 `FENCE` and `FENCE.I` decode as no-ops; synchronization and full privileged
 architecture conformance are outside the implemented scope.
 
@@ -98,12 +98,12 @@ architecture conformance are outside the implemented scope.
 | Clock | **100 MHz / 10 ns** | **50 MHz / 20 ns** |
 | Setup slack | **+0.446 ns** | **+3.943214 ns** |
 | Hold slack | **+0.012 ns** | **+0.000031 ns** |
-| Measurement | Vivado out-of-context routing | StarRC extraction + PrimeTime |
+| Measurement | Vivado out of context routing | StarRC extraction + PrimeTime |
 
-The FPGA timing covers the CPU block only. External memory, full clock-network
+The FPGA timing covers the CPU block only. External memory, full clock network
 integration and software execution on a board are not included.
 
-The ASIC flow includes synthesis, placement, clock-tree synthesis, routing,
+The ASIC flow includes synthesis, placement, clock tree synthesis, routing,
 formal equivalence and extracted timing. The released layout has zero failing
 setup/hold endpoints, zero routing DRCs and zero open nets. Calibre and
 IC Validator each reported **zero findings across 167 DRC checks**, with
@@ -121,31 +121,31 @@ trace helpers, Spike comparison support, and CoreMark and Embench ports.
 
 | Check | Result |
 | --- | --- |
-| [Spike comparison](verification/normalize_spike_trace.py) | The exported 16-instruction ALU commit-trace test passed |
-| [Directed testbenches](tb/) | 60 of 61 passed; the RAS benchmark retains a cycle-count mismatch, 403 observed versus 374 expected |
+| [Spike comparison](verification/normalize_spike_trace.py) | The exported 16 instruction ALU commit trace test passed |
+| [Directed testbenches](tb/) | 60 of 61 passed; the RAS benchmark retains a cycle count mismatch, 403 observed versus 374 expected |
 | [CoreMark](sw/coremark/README.md) | Performance and validation seeds passed the expected CRC checks |
 | [Embench-IoT](sw/embench/) | All 19 programs completed with successful return values |
 
 ## Benchmarks
 
-Measured on the corrected RTL with GCC 15.2.0 and the same delayed-memory
+Measured on the corrected RTL with GCC 15.2.0 and the same delayed memory
 configuration for both compiler profiles.
 
 | Benchmark | `-O2` | `max` |
 | --- | ---: | ---: |
-| CoreMark — iterations per million timed cycles | 2.7743 | **3.2029** |
-| Embench-IoT — geometric-mean relative speed per MHz, 19 programs | 1.217 | **1.488** |
-| Embench combined timed sections — projected at 100 MHz | 652.8 ms | **560.7 ms** |
+| CoreMark (iterations per million timed cycles) | 2.7743 | **3.2029** |
+| Embench-IoT (geometric mean relative speed per MHz, 19 programs) | 1.217 | **1.488** |
+| Embench combined timed sections (projected at 100 MHz) | 652.8 ms | **560.7 ms** |
 
-`max` uses `-O3`, full loop unrolling, an inline limit of 1000, and 8-byte
-function, jump and loop alignment. Both runs use one-cycle instruction/data
+`max` uses `-O3`, full loop unrolling, an inline limit of 1000, and 8 byte
+function, jump and loop alignment. Both runs use one cycle instruction/data
 responses, pipelined instruction fetch and two outstanding data reads.
 
-These are **RTL simulation results, not on-board measurements**. The 100 MHz
+These are **RTL simulation results, not on board measurements**. The 100 MHz
 projection assumes the same memory behavior. CoreMark passed its CRC checks
-over 16 iterations, but the run is shorter than the qualifying ten-second
+over 16 iterations, but the run is shorter than the qualifying ten second
 interval. All 19 Embench programs returned success; XGBoost's upstream
-self-check is weak at the default scale factor.
+self check is weak at the default scale factor.
 
 ```sh
 make coremark MEMORY=delayed PROFILE=max MODE=performance ITERATIONS=16
@@ -162,20 +162,20 @@ Use `PROFILE=o2` to reproduce the comparison column.
 <details>
 <summary>Physical implementation limits</summary>
 
-This is an academic implementation, not foundry signoff. The sub-picosecond
+This is an academic implementation, not foundry signoff. The sub picosecond
 ASIC hold margin is not a robustness margin. Changed intracell metal was not
-recharacterized, and 101,234 zero-limit capacitance entries remain unresolved
-in the model. Some timing-check classes are untested; multi-corner analysis,
-IR-drop, electromigration, packaging and silicon qualification are not covered.
+recharacterized, and 101,234 zero limit capacitance entries remain unresolved
+in the model. Some timing check classes are untested; multi corner analysis,
+IR drop, electromigration, packaging and silicon qualification are not covered.
 
-Both LVS tools retain a source-intended VSS alias diagnostic. Agreement on this
-layout does not establish universal rule-deck equivalence. Proprietary tool
+Both LVS tools retain a source intended VSS alias diagnostic. Agreement on this
+layout does not establish universal rule deck equivalence. Proprietary tool
 reports and rule decks are not included in this repository.
 
 </details>
 
 ## License
 
-Original project code is licensed under [Apache 2.0](LICENSE). Third-party
+Original project code is licensed under [Apache 2.0](LICENSE). Third party
 software and cell geometry retain their own terms and credits; see
-[third-party notices](THIRD_PARTY_NOTICES.md).
+[third party notices](THIRD_PARTY_NOTICES.md).
