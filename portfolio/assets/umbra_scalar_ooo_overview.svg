@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1214" viewBox="0 0 1600 1214" role="img" aria-labelledby="title desc">
+  <title id="title">UMBRA scalar out-of-order core overview</title>
+  <desc id="desc">Block overview of the UMBRA scalar out-of-order RV32IM core: instruction memory port with combinational read, in-order fetch and decode with static not-taken branches and serialized jumps, 64-entry physical register file, free list, rename and dispatch with 4 branch checkpoints, a 16-entry issue queue with oldest-ready select issuing one instruction per cycle, one ALU paired with a branch comparator, one load/store unit with head-gated loads and commit-time stores, one multi-cycle multiply/divide unit, a 32-entry reorder buffer retiring one instruction per cycle, a completion arbiter feeding a single registered writeback lane, the CSR file and the trap unit. Memory ports are request/response interfaces to simulation scratchpads; the core has no caches.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0d12"/>
+      <stop offset="1" stop-color="#15181e"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10Z" fill="#c9c9c9"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif; fill: #f2f2f2; text-anchor: middle; }
+    .t  { font-size: 20px; font-weight: 600; }
+    .s  { font-size: 16px; font-weight: 400; fill: #e0e0e0; }
+    .s2 { font-size: 15px; font-weight: 400; fill: #e0e0e0; }
+    .cell { font-size: 18px; font-weight: 600; }
+    .n  { font-size: 34px; font-weight: 700; }
+    .sec { font-size: 24px; font-weight: 700; fill: #9aa0a6; }
+    .note { font-size: 17px; font-weight: 400; fill: #c9c9c9; }
+    .foot { font-size: 14px; font-style: italic; fill: #8e9cae; }
+    .box { stroke-width: 1.5; }
+    .red    { fill: #5a2424; stroke: #c0504f; }
+    .gray   { fill: #4a4a4a; stroke: #bdbdbd; }
+    .blue   { fill: #1f4652; stroke: #4fa3c7; }
+    .exec   { fill: #4e3818; stroke: #cfa75a; }
+    .olive  { fill: #4a5518; stroke: #a3b83a; }
+    .band { fill: #3a3a3a; opacity: .9; }
+    .colband { fill: #2a2a2c; }
+    .arrow { stroke: #c9c9c9; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+    .arrow2 { stroke: #c9c9c9; stroke-width: 1.5; fill: none; marker-end: url(#arrow); marker-start: url(#arrow); }
+    .divider { stroke: #cfa75a; stroke-opacity: .55; stroke-width: 1.5; }
+  </style>
+
+  <rect width="1600" height="1214" fill="url(#bg)"/>
+
+  <!-- title -->
+  <text x="800" y="82" style="font-size:56px;fill:#e6e8eb"><tspan font-weight="300">UMBRA</tspan><tspan font-weight="700" dx="16">– Scalar OoO Core</tspan></text>
+  <text x="800" y="114" style="font-size:18px;fill:#8e9cae;font-weight:400">RV32IM · register renaming · single-issue out-of-order execution · in-order retirement</text>
+
+  <!-- outer frame -->
+  <rect x="40" y="140" width="1520" height="1034" rx="28" fill="#12151b" stroke="#3a4049" stroke-width="1.5"/>
+
+  <!-- instruction memory port -->
+  <rect class="box red" x="600" y="180" width="400" height="70" rx="3"/>
+  <text class="t" x="800" y="209">Instruction Memory Port</text>
+  <text class="s" x="800" y="235">32-bit · combinational read · 1 instruction per cycle</text>
+  <path class="arrow" d="M800 250V284"/>
+
+  <!-- frontend band -->
+  <text class="sec" x="150" y="243">– Frontend –</text>
+  <rect class="band" x="80" y="285" width="1440" height="270"/>
+
+  <rect class="box gray" x="400" y="300" width="800" height="64" rx="3"/>
+  <text class="t" x="800" y="327">In-order Fetch</text>
+  <text class="s" x="800" y="351">pc + 4 · no predictor: branches static not-taken · jumps serialize · redirect on recovery / trap</text>
+  <path class="arrow" d="M800 364V391"/>
+
+  <rect class="box blue" x="96" y="392" width="340" height="64" rx="3"/>
+  <text class="t" x="266" y="419">Physical Register File</text>
+  <text class="s" x="266" y="443">64 × 32-bit · 2R / 1W · ready table</text>
+
+  <rect class="box gray" x="460" y="392" width="680" height="64" rx="3"/>
+  <text class="t" x="800" y="419">Decode</text>
+  <text class="s" x="800" y="443">pipeline decoder + OoO adaptation · imm-gen · ecall / ebreak / illegal detection</text>
+
+  <rect class="box blue" x="1164" y="392" width="340" height="64" rx="3"/>
+  <text class="t" x="1334" y="419">Free List</text>
+  <text class="s" x="1334" y="443">64 physical registers · commit-time reclaim</text>
+  <path class="arrow" d="M800 456V475"/>
+
+  <rect class="box gray" x="96" y="476" width="1408" height="64" rx="3"/>
+  <text class="t" x="800" y="503">Rename &amp; Dispatch</text>
+  <text class="s" x="800" y="527">speculative + committed maps · 4 branch checkpoints · 1 per cycle</text>
+  <path class="arrow" d="M800 540V584"/>
+
+  <!-- scheduler -->
+  <rect class="box exec" x="96" y="585" width="1408" height="64" rx="3"/>
+  <text class="t" x="800" y="612">Issue Queue</text>
+  <text class="s" x="800" y="636">16 entries · registered-ready wakeup · oldest-ready select · 1 issue per cycle</text>
+
+  <!-- column bands -->
+  <rect class="colband" x="96" y="680" width="620" height="230"/>
+  <rect class="colband" x="732" y="680" width="376" height="365"/>
+  <rect class="colband" x="1124" y="680" width="380" height="240"/>
+  <path class="arrow" d="M406 649V699"/>
+  <path class="arrow" d="M920 649V699"/>
+  <path class="arrow" d="M1314 649V699"/>
+
+  <!-- integer column -->
+  <rect class="box exec" x="112" y="700" width="588" height="120" rx="3"/>
+  <line class="divider" x1="406" y1="710" x2="406" y2="810"/>
+  <text class="cell" x="259" y="742">ALU</text>
+  <text class="n" x="259" y="792">×1</text>
+  <text class="cell" x="553" y="742">BR CMP</text>
+  <text class="n" x="553" y="792">×1</text>
+  <text class="note" x="406" y="848">branches resolve at issue · taken branch → checkpoint recovery</text>
+  <text class="sec" x="406" y="890">Integer</text>
+
+  <!-- memory column -->
+  <rect class="box olive" x="748" y="700" width="344" height="120" rx="3"/>
+  <text class="cell" x="920" y="736">LSU</text>
+  <text class="n" x="920" y="782">×1</text>
+  <text class="s2" x="920" y="808">address generation · no load / store queue</text>
+  <path class="arrow" d="M830 820V869"/>
+  <path class="arrow" d="M1010 820V869"/>
+  <text class="sec" x="920" y="854">Memory</text>
+
+  <rect class="box olive" x="748" y="870" width="164" height="64" rx="3"/>
+  <text class="t" x="830" y="897">Loads</text>
+  <text class="s2" x="830" y="921">head-gated</text>
+  <rect class="box olive" x="928" y="870" width="164" height="64" rx="3"/>
+  <text class="t" x="1010" y="897">Stores</text>
+  <text class="s2" x="1010" y="921">written at commit</text>
+  <path class="arrow2" d="M830 934V964"/>
+  <path class="arrow2" d="M1010 934V964"/>
+
+  <rect class="box red" x="748" y="964" width="344" height="64" rx="3"/>
+  <text class="t" x="920" y="991">Data Memory Port</text>
+  <text class="s" x="920" y="1015">32-bit · request / response</text>
+
+  <!-- multiply / divide column -->
+  <rect class="box exec" x="1140" y="700" width="348" height="120" rx="3"/>
+  <line class="divider" x1="1314" y1="710" x2="1314" y2="810"/>
+  <text class="cell" x="1227" y="742">MUL</text>
+  <text class="n" x="1227" y="792">×1</text>
+  <text class="cell" x="1401" y="742">DIV</text>
+  <text class="n" x="1401" y="792">×1</text>
+  <text class="note" x="1314" y="844">one shared unit</text>
+  <text class="note" x="1314" y="866">32-cycle shift-add multiply · 32-cycle divide</text>
+  <text class="sec" x="1314" y="904">Multiply / Divide</text>
+
+  <!-- retirement -->
+  <rect class="box blue" x="112" y="930" width="588" height="64" rx="3"/>
+  <text class="t" x="406" y="957">Reorder Buffer</text>
+  <text class="s" x="406" y="981">32 entries · in-order retirement · 1 per cycle</text>
+
+  <rect class="box exec" x="112" y="1014" width="588" height="64" rx="3"/>
+  <text class="t" x="406" y="1041">Completion Arbiter → CDB</text>
+  <text class="s" x="406" y="1065">3 clients · oldest first · 1 registered writeback lane</text>
+
+  <!-- CSR / trap -->
+  <rect class="box blue" x="1140" y="930" width="348" height="84" rx="3"/>
+  <text class="t" x="1314" y="958">CSR File</text>
+  <text class="s2" x="1314" y="982">mstatus · mtvec · mepc · mcause · mtval</text>
+  <text class="s2" x="1314" y="1002">read-modify-write at commit</text>
+
+  <rect class="box blue" x="1140" y="1030" width="348" height="64" rx="3"/>
+  <text class="t" x="1314" y="1057">Trap Unit</text>
+  <text class="s" x="1314" y="1081">precise exceptions · full flush + redirect</text>
+
+  <!-- footnote -->
+  <text class="foot" x="800" y="1146">Memory ports are request / response interfaces to simulation scratchpads; the core has no caches. Depths from rtl_ooo/rv32i_ooo_pkg.sv; structure from rv32i_ooo_core.sv and rv32i_ooo_frontend.sv.</text>
+</svg>

@@ -1,0 +1,160 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1290" viewBox="0 0 1600 1290" role="img" aria-labelledby="title desc">
+  <title id="title">UMBRA 2-wide out-of-order core overview</title>
+  <desc id="desc">Block overview of the UMBRA superscalar RV32IM core: instruction memory port, fetch and branch prediction (64-row BTB, 8-entry RAS), fetch queue and 2-wide decode, 64-entry physical register file, free list, rename and dispatch with 8 branch checkpoints, a unified 16-entry issue queue with two grants per cycle, registered select, two ALUs each paired with a branch comparator, one address generation unit, one multiply/divide unit, 8-entry load and store queues, a data memory port with two outstanding reads, a 32-entry reorder buffer retiring up to two instructions per cycle, a completion arbiter feeding two writeback lanes, the CSR file and the trap unit. Memory ports are request/response interfaces to simulation scratchpads; the core has no caches.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0d12"/>
+      <stop offset="1" stop-color="#15181e"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10Z" fill="#c9c9c9"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif; fill: #f2f2f2; text-anchor: middle; }
+    .t  { font-size: 20px; font-weight: 600; }
+    .s  { font-size: 16px; font-weight: 400; fill: #e0e0e0; }
+    .s2 { font-size: 15px; font-weight: 400; fill: #e0e0e0; }
+    .cell { font-size: 18px; font-weight: 600; }
+    .n  { font-size: 34px; font-weight: 700; }
+    .sec { font-size: 24px; font-weight: 700; fill: #9aa0a6; }
+    .note { font-size: 17px; font-weight: 400; fill: #c9c9c9; }
+    .foot { font-size: 14px; font-style: italic; fill: #8e9cae; }
+    .box { stroke-width: 1.5; }
+    .red    { fill: #5a2424; stroke: #c0504f; }
+    .gray   { fill: #4a4a4a; stroke: #bdbdbd; }
+    .blue   { fill: #1f4652; stroke: #4fa3c7; }
+    .exec   { fill: #4e3818; stroke: #cfa75a; }
+    .olive  { fill: #4a5518; stroke: #a3b83a; }
+    .band { fill: #3a3a3a; opacity: .9; }
+    .colband { fill: #2a2a2c; }
+    .arrow { stroke: #c9c9c9; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+    .arrow2 { stroke: #c9c9c9; stroke-width: 1.5; fill: none; marker-end: url(#arrow); marker-start: url(#arrow); }
+    .divider { stroke: #cfa75a; stroke-opacity: .55; stroke-width: 1.5; }
+  </style>
+
+  <rect width="1600" height="1290" fill="url(#bg)"/>
+
+  <!-- title -->
+  <text x="800" y="82" style="font-size:56px;fill:#e6e8eb"><tspan font-weight="300">UMBRA</tspan><tspan font-weight="700" dx="16">– 2-wide OoO Core</tspan></text>
+  <text x="800" y="114" style="font-size:18px;fill:#8e9cae;font-weight:400">RV32IM · register renaming · out-of-order issue · in-order retirement</text>
+
+  <!-- outer frame -->
+  <rect x="40" y="140" width="1520" height="1110" rx="28" fill="#12151b" stroke="#3a4049" stroke-width="1.5"/>
+
+  <!-- instruction memory port -->
+  <rect class="box red" x="600" y="180" width="400" height="70" rx="3"/>
+  <text class="t" x="800" y="209">Instruction Memory Port</text>
+  <text class="s" x="800" y="235">64-bit fetch line · 1 offer + 1 in flight</text>
+  <path class="arrow" d="M800 250V284"/>
+
+  <!-- frontend band -->
+  <text class="sec" x="150" y="243">– Frontend –</text>
+  <rect class="band" x="80" y="285" width="1440" height="270"/>
+
+  <rect class="box gray" x="400" y="300" width="800" height="64" rx="3"/>
+  <text class="t" x="800" y="327">Fetch &amp; Branch Prediction</text>
+  <text class="s" x="800" y="351">BTB 64 rows · RAS 8 entries · 2 lookups per cycle</text>
+  <path class="arrow" d="M800 364V391"/>
+
+  <rect class="box blue" x="96" y="392" width="340" height="64" rx="3"/>
+  <text class="t" x="266" y="419">Physical Register File</text>
+  <text class="s" x="266" y="443">64 × 32-bit · 4R / 2W · ready table</text>
+
+  <rect class="box gray" x="460" y="392" width="680" height="64" rx="3"/>
+  <text class="t" x="800" y="419">Fetch Queue → 2-wide Decode</text>
+  <text class="s" x="800" y="443">2 × 64-bit lines · 2 instructions per cycle</text>
+
+  <rect class="box blue" x="1164" y="392" width="340" height="64" rx="3"/>
+  <text class="t" x="1334" y="419">Free List</text>
+  <text class="s" x="1334" y="443">64 physical registers · 2 images</text>
+  <path class="arrow" d="M800 456V475"/>
+
+  <rect class="box gray" x="96" y="476" width="1408" height="64" rx="3"/>
+  <text class="t" x="800" y="503">Rename &amp; Dispatch</text>
+  <text class="s" x="800" y="527">speculative + committed maps · 8 branch checkpoints · 2 per cycle</text>
+  <path class="arrow" d="M800 540V584"/>
+
+  <!-- unified scheduler -->
+  <rect class="box exec" x="96" y="585" width="1408" height="64" rx="3"/>
+  <text class="t" x="800" y="612">Unified Issue Queue</text>
+  <text class="s" x="800" y="636">16 entries · oldest-first select · 2 grants per cycle</text>
+  <path class="arrow" d="M800 649V674"/>
+
+  <rect class="box exec" x="96" y="675" width="1408" height="64" rx="3"/>
+  <text class="t" x="800" y="702">Registered Select &amp; Operand Read</text>
+  <text class="s" x="800" y="726">2-wide grant · PRF read + result bypass · registered execute input banks</text>
+
+  <!-- column bands -->
+  <rect class="colband" x="96" y="770" width="620" height="230"/>
+  <rect class="colband" x="732" y="770" width="376" height="365"/>
+  <rect class="colband" x="1124" y="770" width="380" height="240"/>
+  <path class="arrow" d="M406 739V789"/>
+  <path class="arrow" d="M920 739V789"/>
+  <path class="arrow" d="M1314 739V789"/>
+
+  <!-- integer column -->
+  <rect class="box exec" x="112" y="790" width="588" height="120" rx="3"/>
+  <line class="divider" x1="406" y1="800" x2="406" y2="900"/>
+  <text class="cell" x="259" y="832">ALU</text>
+  <text class="n" x="259" y="882">×2</text>
+  <text class="cell" x="553" y="832">BR CMP</text>
+  <text class="n" x="553" y="882">×2</text>
+  <text class="note" x="406" y="938">each ALU pairs with a branch comparator · direction + target check</text>
+  <text class="sec" x="406" y="980">Integer</text>
+
+  <!-- memory column -->
+  <rect class="box olive" x="748" y="790" width="344" height="120" rx="3"/>
+  <text class="cell" x="920" y="826">AGEN</text>
+  <text class="n" x="920" y="872">×1</text>
+  <text class="s2" x="920" y="898">address + store byte enables</text>
+  <path class="arrow" d="M830 910V959"/>
+  <path class="arrow" d="M1010 910V959"/>
+  <text class="sec" x="920" y="944">Memory</text>
+
+  <rect class="box olive" x="748" y="960" width="164" height="64" rx="3"/>
+  <text class="t" x="830" y="987">Load Queue</text>
+  <text class="s" x="830" y="1011">8 entries</text>
+  <rect class="box olive" x="928" y="960" width="164" height="64" rx="3"/>
+  <text class="t" x="1010" y="987">Store Queue</text>
+  <text class="s" x="1010" y="1011">8 entries</text>
+  <path class="arrow2" d="M830 1024V1054"/>
+  <path class="arrow2" d="M1010 1024V1054"/>
+
+  <rect class="box red" x="748" y="1054" width="344" height="64" rx="3"/>
+  <text class="t" x="920" y="1081">Data Memory Port</text>
+  <text class="s" x="920" y="1105">32-bit · 2 outstanding reads</text>
+
+  <!-- multiply / divide column -->
+  <rect class="box exec" x="1140" y="790" width="348" height="120" rx="3"/>
+  <line class="divider" x1="1314" y1="800" x2="1314" y2="900"/>
+  <text class="cell" x="1227" y="832">MUL</text>
+  <text class="n" x="1227" y="882">×1</text>
+  <text class="cell" x="1401" y="832">DIV</text>
+  <text class="n" x="1401" y="882">×1</text>
+  <text class="note" x="1314" y="934">one shared unit</text>
+  <text class="note" x="1314" y="956">2-stage multiply · 32-iteration divide</text>
+  <text class="sec" x="1314" y="994">Multiply / Divide</text>
+
+  <!-- retirement -->
+  <rect class="box blue" x="112" y="1020" width="588" height="64" rx="3"/>
+  <text class="t" x="406" y="1047">Reorder Buffer</text>
+  <text class="s" x="406" y="1071">32 entries · in-order retirement · 0–2 per cycle</text>
+
+  <rect class="box exec" x="112" y="1104" width="588" height="64" rx="3"/>
+  <text class="t" x="406" y="1131">Completion Arbiter → CDB</text>
+  <text class="s" x="406" y="1155">5 clients · oldest 2 by age · 2 writeback lanes</text>
+
+  <!-- CSR / trap -->
+  <rect class="box blue" x="1140" y="1020" width="348" height="84" rx="3"/>
+  <text class="t" x="1314" y="1048">CSR File</text>
+  <text class="s2" x="1314" y="1072">mstatus · mtvec · mepc · mcause · mtval</text>
+  <text class="s2" x="1314" y="1092">written at commit</text>
+
+  <rect class="box blue" x="1140" y="1120" width="348" height="64" rx="3"/>
+  <text class="t" x="1314" y="1147">Trap Unit</text>
+  <text class="s" x="1314" y="1171">precise exceptions · full flush + redirect</text>
+
+  <!-- footnote -->
+  <text class="foot" x="800" y="1226">Memory ports are request / response interfaces to simulation scratchpads; the core has no caches. Depths and widths from rtl_superscalar/rv32i_ss_pkg.sv.</text>
+</svg>

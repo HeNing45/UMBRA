@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1254" viewBox="0 0 1600 1254" role="img" aria-labelledby="title desc">
+  <title id="title">UMBRA five-stage pipeline overview</title>
+  <desc id="desc">Block overview of the UMBRA five-stage in-order RV32IM pipeline: instruction memory port; fetch with next-PC selection and a 2-bit bimodal predictor over a 16-entry tagged BTB; decode with immediate generation, a 32-entry architectural register file and the hazard/forwarding unit; execute with one ALU, one branch comparator and one multi-cycle multiply/divide unit plus branch resolution and redirect; memory stage with the load/store unit and data memory port; writeback with register write, CSR file and trap unit. Pipeline registers IF/ID, ID/EX, EX/MEM and MEM/WB separate the stages. Memory ports are request/response interfaces to simulation scratchpads; the core has no caches.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0d12"/>
+      <stop offset="1" stop-color="#15181e"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10Z" fill="#c9c9c9"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif; fill: #f2f2f2; text-anchor: middle; }
+    .t  { font-size: 20px; font-weight: 600; }
+    .s  { font-size: 16px; font-weight: 400; fill: #e0e0e0; }
+    .s2 { font-size: 15px; font-weight: 400; fill: #e0e0e0; }
+    .cell { font-size: 18px; font-weight: 600; }
+    .n  { font-size: 34px; font-weight: 700; }
+    .sec { font-size: 24px; font-weight: 700; fill: #9aa0a6; text-anchor: start; }
+    .reg { font-size: 14px; font-weight: 600; fill: #9aa0a6; letter-spacing: 1px; }
+    .note { font-size: 17px; font-weight: 400; fill: #c9c9c9; }
+    .foot { font-size: 14px; font-style: italic; fill: #8e9cae; }
+    .box { stroke-width: 1.5; }
+    .red    { fill: #5a2424; stroke: #c0504f; }
+    .gray   { fill: #4a4a4a; stroke: #bdbdbd; }
+    .blue   { fill: #1f4652; stroke: #4fa3c7; }
+    .exec   { fill: #4e3818; stroke: #cfa75a; }
+    .olive  { fill: #4a5518; stroke: #a3b83a; }
+    .band { fill: #3a3a3a; opacity: .9; }
+    .colband { fill: #2a2a2c; }
+    .pipereg { fill: #1b1e25; stroke: #3a4049; stroke-width: 1; }
+    .arrow { stroke: #c9c9c9; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+    .arrow2 { stroke: #c9c9c9; stroke-width: 1.5; fill: none; marker-end: url(#arrow); marker-start: url(#arrow); }
+    .divider { stroke: #cfa75a; stroke-opacity: .55; stroke-width: 1.5; }
+  </style>
+
+  <rect width="1600" height="1254" fill="url(#bg)"/>
+
+  <!-- title -->
+  <text x="800" y="82" style="font-size:56px;fill:#e6e8eb"><tspan font-weight="300">UMBRA</tspan><tspan font-weight="700" dx="16">– 5-stage Pipeline</tspan></text>
+  <text x="800" y="114" style="font-size:18px;fill:#8e9cae;font-weight:400">RV32IM · in-order · forwarding + hazard detection · precise M-mode traps</text>
+
+  <!-- outer frame -->
+  <rect x="40" y="140" width="1520" height="1074" rx="28" fill="#12151b" stroke="#3a4049" stroke-width="1.5"/>
+
+  <!-- instruction memory port -->
+  <rect class="box red" x="600" y="172" width="400" height="70" rx="3"/>
+  <text class="t" x="800" y="201">Instruction Memory Port</text>
+  <text class="s" x="800" y="227">32-bit · request / response · 1 fetch in flight</text>
+  <path class="arrow" d="M800 242V269"/>
+
+  <!-- F stage -->
+  <rect class="band" x="80" y="270" width="1440" height="96"/>
+  <text class="sec" x="96" y="326">F</text>
+  <rect class="box gray" x="140" y="286" width="560" height="64" rx="3"/>
+  <text class="t" x="420" y="313">Branch Predictor</text>
+  <text class="s" x="420" y="337">2-bit bimodal · 16-entry tagged BTB · trained in E</text>
+  <rect class="box gray" x="720" y="286" width="784" height="64" rx="3"/>
+  <text class="t" x="1112" y="313">Next-PC Select &amp; Fetch</text>
+  <text class="s" x="1112" y="337">pc + 4 · BTB target · E redirect · W trap / mret · stale response cancelled on redirect</text>
+
+  <rect class="pipereg" x="80" y="366" width="1440" height="22"/>
+  <text class="reg" x="800" y="382">IF / ID</text>
+  <path class="arrow" d="M800 388V403"/>
+
+  <!-- D stage -->
+  <rect class="band" x="80" y="404" width="1440" height="96"/>
+  <text class="sec" x="96" y="460">D</text>
+  <rect class="box blue" x="140" y="420" width="400" height="64" rx="3"/>
+  <text class="t" x="340" y="447">Architectural Register File</text>
+  <text class="s" x="340" y="471">32 × 32-bit · 2R / 1W · W → D bypass</text>
+  <rect class="box gray" x="560" y="420" width="480" height="64" rx="3"/>
+  <text class="t" x="800" y="447">Decode &amp; Immediate Generation</text>
+  <text class="s" x="800" y="471">RV32IM + CSR · ecall / ebreak / illegal detection</text>
+  <rect class="box gray" x="1060" y="420" width="444" height="64" rx="3"/>
+  <text class="t" x="1282" y="447">Hazard &amp; Forwarding Unit</text>
+  <text class="s2" x="1282" y="471">load-use + muldiv stalls · EX/MEM, MEM/WB forwarding</text>
+
+  <rect class="pipereg" x="80" y="500" width="1440" height="22"/>
+  <text class="reg" x="800" y="516">ID / EX</text>
+
+  <!-- E stage -->
+  <rect class="colband" x="80" y="538" width="1440" height="210"/>
+  <path class="arrow" d="M420 522V549"/>
+  <path class="arrow" d="M1180 522V549"/>
+  <text class="sec" x="96" y="594">E</text>
+  <rect class="box exec" x="140" y="550" width="700" height="120" rx="3"/>
+  <line class="divider" x1="373" y1="560" x2="373" y2="660"/>
+  <line class="divider" x1="607" y1="560" x2="607" y2="660"/>
+  <text class="cell" x="256" y="592">ALU</text>
+  <text class="n" x="256" y="642">×1</text>
+  <text class="cell" x="490" y="592">BR CMP</text>
+  <text class="n" x="490" y="642">×1</text>
+  <text class="cell" x="723" y="592">MUL / DIV</text>
+  <text class="n" x="723" y="642">×1</text>
+  <text class="note" x="490" y="700">operands via forwarding muxes (EX/MEM, MEM/WB)</text>
+  <text class="note" x="490" y="724">multiply / divide: 32-cycle shift-add · 32-cycle restoring · stalls F / D / E</text>
+
+  <rect class="box gray" x="860" y="550" width="644" height="120" rx="3"/>
+  <text class="t" x="1182" y="590">Branch Resolution &amp; Redirect</text>
+  <text class="s" x="1182" y="616">mispredict → redirect F · flush IF/ID + ID/EX</text>
+  <text class="s" x="1182" y="640">jal / jalr always redirect · conditional branches train the BTB</text>
+  <text class="note" x="1182" y="700">redirect target: branch / jump target or pc + 4 on a bogus taken prediction</text>
+
+  <rect class="pipereg" x="80" y="750" width="1440" height="22"/>
+  <text class="reg" x="800" y="766">EX / MEM</text>
+  <path class="arrow" d="M800 772 V799"/>
+
+  <!-- M stage -->
+  <rect class="band" x="80" y="800" width="1440" height="164"/>
+  <text class="sec" x="96" y="856">M</text>
+  <rect class="box olive" x="400" y="816" width="800" height="64" rx="3"/>
+  <text class="t" x="800" y="843">Load / Store Unit</text>
+  <text class="s" x="800" y="867">sb / sh / sw byte enables · 1 outstanding request · stalls while waiting</text>
+  <path class="arrow2" d="M800 880 V901"/>
+  <rect class="box red" x="600" y="902" width="400" height="50" rx="3"/>
+  <text class="t" x="800" y="926">Data Memory Port</text>
+  <text class="s2" x="800" y="945">32-bit · request / response</text>
+
+  <rect class="pipereg" x="80" y="964" width="1440" height="22"/>
+  <text class="reg" x="800" y="980">MEM / WB</text>
+  <path class="arrow" d="M340 986 V1013"/>
+  <path class="arrow" d="M800 986 V1013"/>
+  <path class="arrow" d="M1282 986 V1013"/>
+
+  <!-- W stage -->
+  <rect class="band" x="80" y="1014" width="1440" height="116"/>
+  <text class="sec" x="96" y="1080">W</text>
+  <rect class="box blue" x="140" y="1030" width="400" height="84" rx="3"/>
+  <text class="t" x="340" y="1058">Register Writeback</text>
+  <text class="s2" x="340" y="1082">1 write per cycle · x0 hardwired</text>
+  <text class="s2" x="340" y="1102">retire trace: pc · instr · rd · dmem snapshot</text>
+  <rect class="box blue" x="560" y="1030" width="480" height="84" rx="3"/>
+  <text class="t" x="800" y="1058">CSR File</text>
+  <text class="s2" x="800" y="1082">mstatus · mtvec · mepc · mcause · mtval</text>
+  <text class="s2" x="800" y="1102">read-modify-write in W</text>
+  <rect class="box blue" x="1060" y="1030" width="444" height="84" rx="3"/>
+  <text class="t" x="1282" y="1058">Trap Unit</text>
+  <text class="s2" x="1282" y="1082">ecall · ebreak · illegal · misaligned fetch / load / store</text>
+  <text class="s2" x="1282" y="1102">trap + mret taken in W · flush younger stages · redirect F</text>
+
+  <!-- footnote -->
+  <text class="foot" x="800" y="1186">Memory ports are request / response interfaces to simulation scratchpads; the core has no caches. Structure from rtl_p/rv32i_pipeline_core.sv, rv32i_bp.sv, rv32i_hazard.sv and rv32i_muldiv.sv.</text>
+</svg>

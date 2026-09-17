@@ -1,0 +1,214 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 540" role="img" aria-labelledby="title description">
+  <title id="title">UMBRA: a 2-wide out-of-order RISC-V processor</title>
+  <desc id="description">A 2-wide, out-of-order RV32IM processor. 100 MHz FPGA out-of-context core timing; 50 MHz academic ASIC implementation; DRC and LVS checked with Calibre and IC Validator. A gold eclipse ring on the right is divided into six arcs for the instruction lifecycle: fetch, rename, issue, execute, memory and retire, with small packets orbiting it. Inside the dark disc sits a miniature block diagram of the superscalar core: instruction memory port, fetch with BTB and RAS, physical register file, 2-wide decode, free list, rename with 8 checkpoints, 16-entry issue queue with 2 grants, two ALUs with branch comparators, AGEN with 8-entry load and store queues, multiply/divide, 32-entry reorder buffer retiring 2 per cycle, data memory port, 2 CDB lanes, CSR and trap. An architectural illustration, not a chip-layout image.</desc>
+  <defs>
+    <linearGradient id="background" x2="1" y2="1">
+      <stop stop-color="#101722"/><stop offset=".55" stop-color="#090e16"/><stop offset="1" stop-color="#0e131a"/>
+    </linearGradient>
+    <radialGradient id="corona">
+      <stop offset=".52" stop-color="#edb96d" stop-opacity="0"/>
+      <stop offset=".64" stop-color="#e8b66d" stop-opacity=".2"/>
+      <stop offset=".76" stop-color="#e8b66d" stop-opacity=".05"/>
+      <stop offset="1" stop-color="#e8b66d" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ring" x1="0" y1="1" x2="1" y2="0">
+      <stop stop-color="#79532b"/><stop offset=".46" stop-color="#c4904b"/>
+      <stop offset=".76" stop-color="#fff2ce"/><stop offset="1" stop-color="#e0b774"/>
+    </linearGradient>
+    <radialGradient id="disc" cx=".36" cy=".25" r=".85">
+      <stop stop-color="#141c26"/><stop offset=".65" stop-color="#080d14"/><stop offset="1" stop-color="#05090e"/>
+    </radialGradient>
+    <linearGradient id="fade" x2="1">
+      <stop stop-color="#d6aa67" stop-opacity="0"/><stop offset=".6" stop-color="#d6aa67" stop-opacity=".28"/><stop offset="1" stop-color="#d6aa67" stop-opacity=".08"/>
+    </linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#d7e3ec" stroke-opacity=".027"/>
+    </pattern>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.2"/>
+    </filter>
+    <clipPath id="frame"><rect width="1440" height="540" rx="20"/></clipPath>
+    <clipPath id="disc-clip"><circle cx="1090" cy="265" r="159"/></clipPath>
+    <marker id="core-arrow" viewBox="0 0 4 4" refX="4" refY="2" markerWidth="3.5" markerHeight="3.5" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M0 0L4 2L0 4Z" fill="#c9c9c9"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+    .mono, .mono text { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace; }
+    .muted { fill:#8e9cae; }
+    .animated { transform-box:fill-box; transform-origin:center; }
+    .orbit { animation:none; }
+    .drift { animation:none; }
+    .breath { animation:none; opacity:.7; }
+    .signal { animation:none; }
+    .delayed { animation-delay:-4s; }
+    @keyframes orbit { to { transform:rotate(360deg); } }
+    @keyframes breath { 0%,100% { opacity:.5; } 50% { opacity:.95; } }
+    @keyframes signal { to { stroke-dashoffset:-320; } }
+    @media (prefers-reduced-motion:reduce) {
+      .animated { animation:none !important; }
+    }
+    .stage { font-size:9.5px; letter-spacing:1.6px; fill:#b6a17e; text-anchor:middle; }
+    .lbl { font-size:8px; letter-spacing:.2px; fill:#e6e6e6; text-anchor:middle; }
+    .box { stroke-width:.8; }
+    .red    { fill:#5a2424; stroke:#c0504f; }
+    .gray   { fill:#4a4a4a; stroke:#bdbdbd; }
+    .blue   { fill:#1f4652; stroke:#4fa3c7; }
+    .exec   { fill:#4e3818; stroke:#cfa75a; }
+    .olive  { fill:#4a5518; stroke:#a3b83a; }
+    .link { fill:none; stroke:#c9c9c9; stroke-opacity:.75; stroke-width:.8; marker-end:url(#core-arrow); }
+  </style>
+  <g clip-path="url(#frame)">
+    <rect width="1440" height="540" fill="url(#background)"/>
+    <rect width="1440" height="540" fill="url(#grid)"/>
+    <path d="M720 86H824L856 118H904 M704 108H804L832 136H887
+             M743 413H824L862 375H918 M688 437H842L881 398H931
+             M1270 140H1324L1350 114H1440 M1275 353H1322L1360 391H1440"
+          fill="none" stroke="url(#fade)" stroke-width="1"/>
+    <g fill="none" stroke="#dcac6a" stroke-width="1.5" stroke-dasharray="5 315" opacity=".55">
+      <path class="animated signal" d="M704 108H804L832 136H887"/>
+      <path class="animated signal delayed" d="M688 437H842L881 398H931"/>
+    </g>
+    <g fill="#b9c9da" opacity=".4">
+      <circle cx="750" cy="66" r="1.2"/><circle cx="1381" cy="228" r="1.3"/>
+      <circle cx="839" cy="287" r="1"/><circle cx="1328" cy="440" r="1"/>
+      <path d="M795 212h8m-4-4v8 M1360 321h8m-4-4v8" stroke="#b9c9da"/>
+    </g>
+
+    <text x="74" y="67" class="mono muted" font-size="14" letter-spacing="2.3">RISC-V / RTL TO PHYSICAL IMPLEMENTATION</text>
+    <path d="M74 94H114" stroke="#e7c18a" stroke-width="2"/>
+    <text x="65" y="251" fill="#f3f0e7" font-size="146" font-weight="500" letter-spacing="8">UMBRA</text>
+    <text x="74" y="309" fill="#d0d7df" font-size="27" font-weight="300">A 2-wide, out-of-order RISC-V processor.</text>
+    <text x="75" y="348" class="muted" font-size="20">RV32IM in SystemVerilog. From RTL to layout.</text>
+
+    <g transform="translate(74 426)">
+      <text fill="#f0e6d7" font-size="30" font-weight="500">100 MHz</text>
+      <text y="27" class="mono muted" font-size="12">FPGA / ROUTED OOC</text>
+      <path d="M199 -26V30" stroke="#303b49"/>
+      <text x="231" fill="#f0e6d7" font-size="30" font-weight="500">50 MHz</text>
+      <text x="231" y="27" class="mono muted" font-size="12">ASIC / EXTRACTED</text>
+      <path d="M425 -26V30" stroke="#303b49"/>
+      <text x="457" fill="#f0e6d7" font-size="30" font-weight="500">DRC + LVS</text>
+      <text x="457" y="27" class="mono muted" font-size="12">CALIBRE + ICV</text>
+    </g>
+
+    <!-- ===================== eclipse ===================== -->
+    <g class="eclipse">
+      <circle cx="1090" cy="265" r="250" fill="url(#corona)" class="animated breath"/>
+
+      <!-- lifecycle ring: six stage arcs, clockwise from the top -->
+      <circle cx="1090" cy="265" r="220" fill="none" stroke="#b89159" opacity=".14"/>
+      <circle cx="1090" cy="265" r="198" fill="none" stroke="#b89159" opacity=".16" stroke-dasharray="1 11" class="animated drift"/>
+      <g fill="none" stroke-width="2.5" stroke-linecap="butt" opacity=".62">
+        <path d="M1090 45A220 220 0 0 1 1280.5 155" stroke="#bdbdbd"/>
+        <path d="M1280.5 155A220 220 0 0 1 1280.5 375" stroke="#bdbdbd"/>
+        <path d="M1280.5 375A220 220 0 0 1 1090 485" stroke="#cfa75a"/>
+        <path d="M1090 485A220 220 0 0 1 899.5 375" stroke="#cfa75a"/>
+        <path d="M899.5 375A220 220 0 0 1 899.5 155" stroke="#a3b83a"/>
+        <path d="M899.5 155A220 220 0 0 1 1090 45" stroke="#4fa3c7"/>
+      </g>
+      <!-- stage boundaries -->
+      <g stroke="#b6a17e" stroke-opacity=".55" stroke-width="1">
+        <path d="M1090 38V52"/>
+        <path d="M1275.3 151.5L1285.7 158.5"/>
+        <path d="M1275.3 378.5L1285.7 371.5"/>
+        <path d="M1090 478V492"/>
+        <path d="M904.7 378.5L894.3 371.5"/>
+        <path d="M904.7 151.5L894.3 158.5"/>
+      </g>
+      <!-- orbiting instruction packets -->
+      <circle cx="1090" cy="265" r="220" fill="none" stroke="#f1cf8c" stroke-width="3" stroke-linecap="round"
+              stroke-dasharray="5 110.2" stroke-dashoffset="-38" opacity=".9" class="animated orbit"/>
+      <circle cx="1090" cy="265" r="220" fill="none" stroke="#f1cf8c" stroke-width="7" stroke-linecap="round"
+              stroke-dasharray="5 110.2" stroke-dashoffset="-38" opacity=".28" filter="url(#soft)" class="animated orbit"/>
+      <!-- stage labels, outside the ring -->
+      <g class="mono stage">
+        <text x="1211" y="57">FETCH</text>
+        <text x="1358" y="269">RENAME</text>
+        <text x="1211" y="480">ISSUE</text>
+        <text x="969" y="480">EXECUTE</text>
+        <text x="822" y="269">MEMORY</text>
+        <text x="969" y="57">RETIRE</text>
+      </g>
+
+      <!-- disc -->
+      <circle cx="1090" cy="265" r="165" fill="none" stroke="#f0be70" stroke-width="9" opacity=".35" filter="url(#glow)"/>
+      <circle cx="1090" cy="265" r="162" fill="url(#disc)" stroke="url(#ring)" stroke-width="2.2"/>
+
+      <g clip-path="url(#disc-clip)">
+        <!-- package pins -->
+        <g fill="none" stroke="#baa071" stroke-opacity=".45" stroke-width="1">
+          <path d="M936 213h30m-36 26h36m-40 26h40m-36 26h36m-30 26h30
+                   M1214 213h30m-30 26h36m-36 26h40m-40 26h36m-36 26h30
+                   M1038 120v33m26-39v39m26-41v41m26-39v39m26-33v33
+                   M1038 377v33m26-33v39m26-39v41m26-41v39m26-39v33"/>
+        </g>
+        <!-- package + die -->
+        <rect x="972" y="155" width="236" height="220" rx="5" fill="#111d28" stroke="#c4a46d" stroke-opacity=".8"/>
+        <rect x="976" y="159" width="228" height="212" rx="2" fill="#0d1721" stroke="#6a634f" stroke-opacity=".5"/>
+
+        <!-- themed miniature of the superscalar core -->
+        <g class="core">
+          <rect class="box red" x="980" y="163" width="220" height="16"/>
+          <text class="mono lbl" x="1090" y="174.5">IMEM PORT · 64-BIT LINE</text>
+          <path class="link" d="M1090 179V184"/>
+
+          <rect class="box gray" x="980" y="185" width="220" height="18"/>
+          <text class="mono lbl" x="1090" y="197">FETCH · BTB 64 · RAS 8</text>
+          <path class="link" d="M1090 203V208"/>
+
+          <rect class="box blue" x="980" y="209" width="54" height="18"/>
+          <text class="mono lbl" x="1007" y="221">PRF 64</text>
+          <rect class="box gray" x="1038" y="209" width="104" height="18"/>
+          <text class="mono lbl" x="1090" y="221">DECODE ×2</text>
+          <rect class="box blue" x="1146" y="209" width="54" height="18"/>
+          <text class="mono lbl" x="1173" y="221">FREE LIST</text>
+          <path class="link" d="M1090 227V232"/>
+
+          <rect class="box gray" x="980" y="233" width="220" height="18"/>
+          <text class="mono lbl" x="1090" y="245">RENAME · 8 CHECKPOINTS</text>
+          <path class="link" d="M1090 251V256"/>
+
+          <rect class="box exec" x="980" y="257" width="220" height="18"/>
+          <text class="mono lbl" x="1090" y="269">ISSUE QUEUE 16 · 2 GRANTS</text>
+          <path class="link" d="M1026 275V280"/>
+          <path class="link" d="M1112 275V280"/>
+          <path class="link" d="M1176 275V280"/>
+
+          <rect class="box exec" x="980" y="281" width="92" height="34"/>
+          <text class="mono lbl" x="1026" y="295">ALU ×2</text>
+          <text class="mono lbl" x="1026" y="309">BR CMP ×2</text>
+          <rect class="box olive" x="1076" y="281" width="72" height="34"/>
+          <text class="mono lbl" x="1112" y="295">AGEN ×1</text>
+          <text class="mono lbl" x="1112" y="309">LQ 8 · SQ 8</text>
+          <rect class="box exec" x="1152" y="281" width="48" height="34"/>
+          <text class="mono lbl" x="1176" y="295">MUL</text>
+          <text class="mono lbl" x="1176" y="309">DIV</text>
+          <path class="link" d="M1026 315V320"/>
+          <path class="link" d="M1120 315V320"/>
+
+          <rect class="box blue" x="980" y="321" width="128" height="18"/>
+          <text class="mono lbl" x="1044" y="333">ROB 32 · RETIRE ×2</text>
+          <rect class="box red" x="1112" y="321" width="88" height="18"/>
+          <text class="mono lbl" x="1156" y="333">DMEM PORT</text>
+          <path class="link" d="M1044 339V344"/>
+
+          <rect class="box exec" x="980" y="345" width="128" height="18"/>
+          <text class="mono lbl" x="1044" y="357">CDB ×2 · WRITEBACK</text>
+          <rect class="box blue" x="1112" y="345" width="88" height="18"/>
+          <text class="mono lbl" x="1156" y="357">CSR · TRAP</text>
+        </g>
+      </g>
+
+      <!-- diamond-ring spark on the rim -->
+      <circle cx="1205" cy="150" r="12" fill="#ffe4b2" opacity=".7" filter="url(#glow)" class="animated breath"/>
+      <circle cx="1205" cy="150" r="2.7" fill="#fff7e4"/>
+    </g>
+
+    <rect x=".5" y=".5" width="1439" height="539" rx="20" fill="none" stroke="#2d3846"/>
+  </g>
+</svg>

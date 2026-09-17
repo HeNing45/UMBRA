@@ -1,7 +1,7 @@
 <p align="center">
   <picture>
-    <source media="(prefers-reduced-motion: reduce)" srcset="portfolio/assets/umbra_cover_animated_preview.png"/>
-    <img src="portfolio/assets/umbra_cover_animated.svg" alt="UMBRA: a 2-wide out-of-order RV32IM processor. 100 MHz FPGA core timing; 50 MHz academic ASIC implementation." width="100%"/>
+    <source media="(prefers-reduced-motion: reduce)" srcset="portfolio/assets/umbra_cover_v2.svg"/>
+    <img src="portfolio/assets/umbra_cover_v2_animated.svg" alt="UMBRA: a 2-wide out-of-order RV32IM processor. 100 MHz FPGA core timing; 50 MHz academic ASIC implementation." width="100%"/>
   </picture>
 </p>
 
@@ -42,6 +42,24 @@ datapath to the superscalar implementation.
 | Scalar out-of-order | Register renaming, dynamic scheduling and ordered retirement | [rtl_ooo/](rtl_ooo/) |
 | 2-wide out-of-order | Dual issue and retirement, two ALUs and a load/store queue | [rtl_superscalar/](rtl_superscalar/) |
 
+<details>
+<summary>Five-stage pipeline: microarchitecture</summary>
+
+[![UMBRA five-stage pipeline overview](portfolio/assets/umbra_pipeline_overview.svg)](portfolio/assets/umbra_pipeline_overview.svg)
+
+[Pipeline RTL](rtl_p/) · [Open full-size diagram](portfolio/assets/umbra_pipeline_overview.svg)
+
+</details>
+
+<details>
+<summary>Single-issue out-of-order core: microarchitecture</summary>
+
+[![UMBRA single-issue out-of-order core overview](portfolio/assets/umbra_scalar_ooo_overview.svg)](portfolio/assets/umbra_scalar_ooo_overview.svg)
+
+[Scalar OoO RTL](rtl_ooo/) · [Open full-size diagram](portfolio/assets/umbra_scalar_ooo_overview.svg)
+
+</details>
+
 ## Inside the superscalar core
 
 The core has a 32-entry reorder buffer, 64 physical registers, a unified
@@ -50,6 +68,10 @@ unit and a dedicated address generation unit feed two writeback lanes.
 8-entry load and store queues manage memory operations, while retirement
 stays in program order. Registered selection and operand boundaries separate
 scheduling from execution.
+
+[![UMBRA 2-wide out-of-order core overview](portfolio/assets/umbra_core_overview.svg)](portfolio/assets/umbra_core_overview.svg)
+
+[Open full-size overview](portfolio/assets/umbra_core_overview.svg)
 
 [Frontend](rtl_superscalar/rv32i_ss_frontend.sv) ·
 [Rename](rtl_superscalar/rv32i_ss_rename.sv) ·
@@ -60,7 +82,7 @@ scheduling from execution.
 [Core integration](rtl_superscalar/rv32i_ss_core.sv)
 
 <details open>
-<summary>View the architecture schematic</summary>
+<summary>Detailed superscalar schematic: signals and connections</summary>
 
 ![UMBRA frontend, rename, scheduling, execution and memory](portfolio/assets/umbra_architecture.svg)
 
