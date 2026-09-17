@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: Copyright 2026 He Ning
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 /* Minimal RV32IM reset/startup path for UMBRA Embench-IoT images.
  *
  * Same shape as the CoreMark crt0, with one deliberate difference: Embench's

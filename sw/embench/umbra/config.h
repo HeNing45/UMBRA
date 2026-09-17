@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: Copyright 2026 He Ning
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 /* UMBRA Embench-IoT port configuration.
  *
  * Included by upstream support code via -DHAVE_CONFIG_H (support.h) and

@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: Copyright 2026 He Ning
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 OUTPUT_ARCH(riscv)
 ENTRY(_start)
 

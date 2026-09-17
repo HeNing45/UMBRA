@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: Copyright 2026 He Ning
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 /* UMBRA Embench-IoT board support.
  *
  * Textually included by upstream support/board.c (never compiled standalone).

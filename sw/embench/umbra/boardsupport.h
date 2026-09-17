@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: Copyright 2026 He Ning
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 /* UMBRA Embench-IoT board support header.
  *
  * Pulled in by upstream support.h under HAVE_BOARDSUPPORT_H. The port has no
