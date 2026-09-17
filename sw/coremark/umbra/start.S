@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: Copyright 2026 He Ning
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 /* Minimal RV32IM reset/startup path for the UMBRA CoreMark image. */
 
     .section .text.init

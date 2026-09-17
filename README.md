@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2026 He Ning
+SPDX-License-Identifier: Apache-2.0
+-->
+
 <p align="center">
   <picture>
     <source media="(prefers-reduced-motion: reduce)" srcset="portfolio/assets/umbra_cover_v2.svg"/>
@@ -14,7 +19,10 @@
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License: Apache 2.0"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/Original_code-Apache_2.0-blue.svg" alt="Original UMBRA code: Apache 2.0"/></a>
+  <br/>
+  Mixed-license repository: original code is Apache-2.0; benchmarks retain their own terms.
+  <a href="THIRD_PARTY_NOTICES.md">Third-party licences and notices</a>
 </p>
 
 ## UMBRA: a 2-wide out-of-order RISC-V processor
@@ -139,13 +147,14 @@ IC Validator each reported **zero findings across 167 DRC checks**, with
 ## Verification
 
 The repository includes 66 superscalar testbench sources, shared memory and
-trace helpers, Spike comparison support, and CoreMark and Embench ports.
+trace helpers, Spike comparison support, and CoreMark® and Embench ports.
+CoreMark is a trademark of EEMBC.
 
 | Check | Result |
 | --- | --- |
 | [Spike comparison](verification/normalize_spike_trace.py) | The exported 16-instruction ALU commit-trace test passed |
 | [Directed testbenches](tb/) | 60 of 61 passed; the RAS benchmark retains a cycle-count mismatch, 403 observed versus 374 expected |
-| [CoreMark](sw/coremark/README.md) | Performance and validation seeds passed the expected CRC checks |
+| [CoreMark-derived CRC check](sw/coremark/README.md) | Performance and validation seeds passed the expected CRC checks |
 | [Embench-IoT](sw/embench/) | All 19 programs completed with successful return values |
 
 ## Benchmarks
@@ -155,7 +164,7 @@ configuration for both compiler profiles.
 
 | Benchmark | `-O2` | `max` |
 | --- | ---: | ---: |
-| CoreMark (iterations per million timed cycles) | 2.7743 | **3.2029** |
+| CoreMark-derived CRC/cycle check (iterations per million timed RTL cycles) | 2.7743 | **3.2029** |
 | Embench-IoT (geometric mean relative speed per MHz, 19 programs) | 1.217 | **1.488** |
 | Embench combined timed sections (projected at 100 MHz) | 652.8 ms | **560.7 ms** |
 
@@ -164,9 +173,10 @@ function, jump and loop alignment. Both runs use one-cycle instruction/data
 responses, pipelined instruction fetch and two outstanding data reads.
 
 These are **RTL simulation results, not on-board measurements**. The 100 MHz
-projection assumes the same memory behavior. CoreMark passed its CRC checks
-over 16 iterations, but the run is shorter than the qualifying ten-second
-interval. All 19 Embench programs returned success; XGBoost's upstream
+projection assumes the same memory behavior. The CoreMark-derived check
+passed its CRCs over 16 iterations. It is shorter than the required ten
+seconds and is **not an official CoreMark score**; the values above are
+RTL-cycle measurements only. All 19 Embench programs returned success; XGBoost's upstream
 self-check is weak at the default scale factor.
 
 ```sh
@@ -198,6 +208,12 @@ reports and rule decks are not included in this repository.
 
 ## License
 
-Original project code is licensed under [Apache 2.0](LICENSE). Third-party
-software and cell geometry retain their own terms and credits; see
-[third-party notices](THIRD_PARTY_NOTICES.md).
+This repository contains material under several licences. Original UMBRA RTL,
+testbenches, verification tools and documentation are Copyright 2026 He Ning,
+licensed under [Apache-2.0](LICENSE); see [NOTICE](NOTICE).
+
+Embench's upstream sources and UMBRA port are GPL-3.0-or-later, with additional
+per-file notices. CoreMark software is Apache-2.0 and use of its mark is subject
+to the COREMARK® Acceptable Use Agreement. The GDS includes Apache-2.0
+OSU/FreePDK45 cell geometry. See [third-party notices](THIRD_PARTY_NOTICES.md)
+for component terms and redistribution requirements.

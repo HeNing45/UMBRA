@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: Copyright 2026 He Ning
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 /* UMBRA simulation-only CoreMark platform implementation. */
 #include "coremark.h"
 #include "core_portme.h"

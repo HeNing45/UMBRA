@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2026 He Ning
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # Implementation
 
 ## Four processor generations
@@ -30,12 +35,12 @@ CSR/trap support.
 ## Verification
 
 - **Spike:** passed the 16-instruction ALU commit-trace comparison.
-- **CoreMark:** performance and validation seed sets passed all expected CRC checks.
+- **CoreMark®-derived CRC check:** performance and validation seed sets passed all expected CRC checks.
 - **Embench:** all 19 programs completed with successful return values; the
   unchanged XGBoost self-check is weak at the default scale factor.
 
-These are RTL simulation checks. The short CoreMark runs are not qualifying
-benchmark scores. The directed superscalar suite passed 60 of 61 tests;
+CoreMark is a trademark of EEMBC. These are RTL simulation checks, not official
+CoreMark scores. The directed superscalar suite passed 60 of 61 tests;
 `tb_rv32i_ss_ras_bench` still has a cycle-count mismatch (403 versus 374 expected).
 
 ## Physical layout
@@ -72,11 +77,12 @@ data reads. The `max` combined timed sections would take **560.7 ms at 100 MHz**
 (652.8 ms at `-O2`), assuming the same cycle counts and memory behavior.
 This is a simulation projection, not an FPGA benchmark measurement.
 
-The corrected RTL also passes CoreMark performance and validation CRC checks.
+The corrected RTL also passes the CoreMark-derived performance and validation CRC checks.
 The 16-iteration `max` sample takes 4,995,442 timed cycles, or **3.2029 iterations
-per million timed cycles**. The `-O2` comparison takes 5,767,311 timed cycles
-and scores **2.7743**. The run is shorter than ten seconds and is not a
-qualifying CoreMark score. These results use the delayed-memory configuration
+per million timed RTL cycles**. The `-O2` comparison takes 5,767,311 timed cycles
+and measures **2.7743 iterations per million timed RTL cycles**. These are
+CRC/cycle checks, not an official CoreMark score. The run is shorter than
+the required ten seconds. These results use the delayed-memory configuration
 described under [Running checks](#running-checks).
 
 ## Running checks
@@ -102,3 +108,14 @@ outstanding reads. Each profile has a separate simulator build directory.
 `PROFILE=o2` is the default compiler setting. `PROFILE=max` uses `-O3`,
 `-funroll-all-loops`, `-finline-limit=1000`, and 8-byte function, jump and loop
 alignment. Benchmark outputs are separated by memory and compiler profile.
+
+## Licences
+
+This is a mixed-license repository. Original UMBRA RTL, testbenches,
+verification tools and documentation are Copyright 2026 He Ning,
+[Apache-2.0](../LICENSE). Embench's upstream sources and UMBRA port are
+GPL-3.0-or-later, with per-file notices; compiled Embench workloads are GPL
+combined works, not a relicensing of the CPU RTL. CoreMark software is
+Apache-2.0 plus the COREMARK® Acceptable Use Agreement for the mark.
+The release-only GDS includes Apache-2.0 OSU/FreePDK45 cell geometry.
+See [NOTICE](../NOTICE) and [third-party notices](../THIRD_PARTY_NOTICES.md).

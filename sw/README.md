@@ -1,14 +1,24 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2026 He Ning
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # Software
 
-[CoreMark](coremark/README.md) and [Embench-IoT](embench/) run as bare-metal
+[CoreMark®-derived CRC checks](coremark/README.md) and [Embench-IoT](embench/) run as bare-metal
 simulation workloads. Each has `upstream/` sources and an `umbra/` platform port.
 Assembly programs and memory images support the directed tests and Spike comparison.
 The `rv32i_*_smoke` and `rv32i_smoke_start` files are small instruction tests;
 the `_rars` variant uses data labels for execution in RARS.
 
-Embench's upstream sources retain their GPLv3 and per-file licence notices.
-See [third-party notices](../THIRD_PARTY_NOTICES.md); the repository's Apache
-licence does not replace the licences of bundled benchmarks.
+CoreMark is a trademark of EEMBC. This is a mixed-license repository:
+original UMBRA tools and the CoreMark platform port are Apache-2.0,
+Copyright 2026 He Ning. CoreMark software is Apache-2.0 plus the COREMARK®
+Acceptable Use Agreement for the mark. Embench's upstream suite and UMBRA
+port are GPL-3.0-or-later, with per-file notices. Redistributing the Embench
+workload or binaries built from it requires GPLv3 compliance, including
+corresponding source for binaries; this does not relicense the CPU RTL.
+See [third-party notices](../THIRD_PARTY_NOTICES.md).
 
 Run from the repository root:
 
@@ -30,10 +40,11 @@ See [benchmark results](../docs/IMPLEMENTATION.md#fpga-and-benchmark-results).
 instruction responses, one-cycle data responses and two outstanding reads.
 `MEMORY=zero` remains the default. The profiles use separate simulator builds.
 
-The CoreMark `max` sample on the corrected RTL measures **3.2029 iterations per million
-timed cycles** over 16 iterations, versus **2.7743** at `-O2`. CRC checks pass,
-but the short run is not a qualifying ten-second CoreMark score or an
-on-board measurement.
+The CoreMark-derived `max` CRC/cycle sample on the corrected RTL measures
+**3.2029 iterations per million timed RTL cycles** over 16 iterations,
+versus **2.7743** at `-O2`. CRC checks pass, but the run is shorter than the
+required ten seconds. It is **not an official CoreMark score** or an on-board
+measurement.
 
 `PROFILE=o2` is the default. `PROFILE=max` selects `-O3`, full loop unrolling,
 an inline limit of 1000, and 8-byte function, jump and loop alignment.

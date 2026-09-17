@@ -1,4 +1,9 @@
 /*
+ * SPDX-FileCopyrightText: Copyright 2026 He Ning
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/*
  * UMBRA bare-metal CoreMark platform configuration.
  *
  * CoreMark upstream is Apache-2.0 licensed. This port file is intentionally
