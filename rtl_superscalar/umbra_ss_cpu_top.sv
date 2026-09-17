@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 He Ning
+// SPDX-License-Identifier: Apache-2.0
+
 `timescale 1ns/1ps
 
 // umbra_ss_cpu_top - wiring-only CPU top: rv32i_ss_frontend + rv32i_ss_core.

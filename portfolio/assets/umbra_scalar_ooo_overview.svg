@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2026 He Ning
+SPDX-License-Identifier: Apache-2.0
+-->
+
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1214" viewBox="0 0 1600 1214" role="img" aria-labelledby="title desc">
   <title id="title">UMBRA scalar out-of-order core overview</title>
   <desc id="desc">Block overview of the UMBRA scalar out-of-order RV32IM core: instruction memory port with combinational read, in-order fetch and decode with static not-taken branches and serialized jumps, 64-entry physical register file, free list, rename and dispatch with 4 branch checkpoints, a 16-entry issue queue with oldest-ready select issuing one instruction per cycle, one ALU paired with a branch comparator, one load/store unit with head-gated loads and commit-time stores, one multi-cycle multiply/divide unit, a 32-entry reorder buffer retiring one instruction per cycle, a completion arbiter feeding a single registered writeback lane, the CSR file and the trap unit. Memory ports are request/response interfaces to simulation scratchpads; the core has no caches.</desc>

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 He Ning
+// SPDX-License-Identifier: Apache-2.0
+
 #include "Vumbra_coremark_sim_top.h"
 #include "verilated.h"
 

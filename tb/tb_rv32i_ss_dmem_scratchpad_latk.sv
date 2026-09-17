@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 He Ning
+// SPDX-License-Identifier: Apache-2.0
+
 // Conformance battery for the RESP_LATENCY >= 2 response pipe.
 // Checks exact T+K timing, data capture at acceptance, one response per read,
 // concurrent store acceptance, reset cancellation, capacity-overflow fatal,

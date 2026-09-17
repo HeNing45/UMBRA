@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 He Ning
+// SPDX-License-Identifier: Apache-2.0
+
 `timescale 1ns/1ps
 
 // program-level TB: umbra_ss_cpu_top (frontend + core) + instruction

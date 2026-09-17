@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright 2026 He Ning
+# SPDX-License-Identifier: Apache-2.0
+
 # Minimal RV32I single-cycle smoke program.
 #
 # Local Verilator testbench assumptions:

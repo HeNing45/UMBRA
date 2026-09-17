@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2026 He Ning
+SPDX-License-Identifier: Apache-2.0
+-->
+
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1254" viewBox="0 0 1600 1254" role="img" aria-labelledby="title desc">
   <title id="title">UMBRA five-stage pipeline overview</title>
   <desc id="desc">Block overview of the UMBRA five-stage in-order RV32IM pipeline: instruction memory port; fetch with next-PC selection and a 2-bit bimodal predictor over a 16-entry tagged BTB; decode with immediate generation, a 32-entry architectural register file and the hazard/forwarding unit; execute with one ALU, one branch comparator and one multi-cycle multiply/divide unit plus branch resolution and redirect; memory stage with the load/store unit and data memory port; writeback with register write, CSR file and trap unit. Pipeline registers IF/ID, ID/EX, EX/MEM and MEM/WB separate the stages. Memory ports are request/response interfaces to simulation scratchpads; the core has no caches.</desc>

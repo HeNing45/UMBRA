@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright 2026 He Ning
+# SPDX-License-Identifier: Apache-2.0
+
 # Branch-focused RV32I smoke program for the local RTL testbench.
 #
 # Local RTL testbench assumptions:

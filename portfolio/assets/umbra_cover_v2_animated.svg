@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2026 He Ning
+SPDX-License-Identifier: Apache-2.0
+-->
+
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 540" role="img" aria-labelledby="title description">
   <title id="title">UMBRA: a 2-wide out-of-order RISC-V processor</title>
   <desc id="description">A 2-wide, out-of-order RV32IM processor. 100 MHz FPGA out-of-context core timing; 50 MHz academic ASIC implementation; DRC and LVS checked with Calibre and IC Validator. A gold eclipse ring on the right is divided into six arcs for the instruction lifecycle: fetch, rename, issue, execute, memory and retire, with small packets orbiting it. Inside the dark disc sits a miniature block diagram of the superscalar core: instruction memory port, fetch with BTB and RAS, physical register file, 2-wide decode, free list, rename with 8 checkpoints, 16-entry issue queue with 2 grants, two ALUs with branch comparators, AGEN with 8-entry load and store queues, multiply/divide, 32-entry reorder buffer retiring 2 per cycle, data memory port, 2 CDB lanes, CSR and trap. An architectural illustration, not a chip-layout image.</desc>

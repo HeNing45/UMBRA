@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright 2026 He Ning
+# SPDX-License-Identifier: Apache-2.0
+
 # Directed sub-word load smoke program for the single-cycle RTL testbench.
 #
 # Local memory model is little-endian word-backed:

@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2026 He Ning
+SPDX-License-Identifier: Apache-2.0
+-->
+
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1290" viewBox="0 0 1600 1290" role="img" aria-labelledby="title desc">
   <title id="title">UMBRA 2-wide out-of-order core overview</title>
   <desc id="desc">Block overview of the UMBRA superscalar RV32IM core: instruction memory port, fetch and branch prediction (64-row BTB, 8-entry RAS), fetch queue and 2-wide decode, 64-entry physical register file, free list, rename and dispatch with 8 branch checkpoints, a unified 16-entry issue queue with two grants per cycle, registered select, two ALUs each paired with a branch comparator, one address generation unit, one multiply/divide unit, 8-entry load and store queues, a data memory port with two outstanding reads, a 32-entry reorder buffer retiring up to two instructions per cycle, a completion arbiter feeding two writeback lanes, the CSR file and the trap unit. Memory ports are request/response interfaces to simulation scratchpads; the core has no caches.</desc>

@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: Copyright 2026 He Ning
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 # Register-only machine-mode trap round trip: ECALL enters the mtvec handler,
 # the handler advances mepc, and MRET resumes after ECALL.
 .option arch, +zicsr

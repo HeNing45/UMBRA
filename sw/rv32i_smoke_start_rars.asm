@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright 2026 He Ning
+# SPDX-License-Identifier: Apache-2.0
+
 # RARS-safe version of rv32i_smoke_start.asm.
 #
 # The local RTL smoke test intentionally uses address 0(x0) for dmem[0].

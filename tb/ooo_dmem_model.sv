@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 He Ning
+// SPDX-License-Identifier: Apache-2.0
+
 `timescale 1ns/1ps
 
 // ooo_dmem_model — reusable data-memory model for the OoO core testbenches.

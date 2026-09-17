@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 He Ning
+// SPDX-License-Identifier: Apache-2.0
+
 `timescale 1ns/1ps
 
 module tb_rv32i_ss_prf;

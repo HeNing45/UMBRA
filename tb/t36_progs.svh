@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 He Ning
+// SPDX-License-Identifier: Apache-2.0
+
 // t36_progs.svh — instruction images for directed program testbenches.
 // Each image lists the instruction address beside its encoded word.
 task automatic load_prog_dual_a();

@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: Copyright 2026 He Ning
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 # Full-overlap store-to-load forwarding stimulus.
 #
 # Pattern (x8): an older store whose DATA is late (muldiv), followed by a

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright 2026 He Ning
+# SPDX-License-Identifier: Apache-2.0
+
 # Small local entry points for simulation and benchmark checks.
 PYTHON ?= python3
 CROSS ?= riscv-none-elf-

@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 He Ning
+// SPDX-License-Identifier: Apache-2.0
+
 // Simulation-only pipeline invariants.
 //
 // This file intentionally uses plain procedural if/$fatal checks instead of

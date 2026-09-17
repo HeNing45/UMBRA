@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2026 He Ning
+SPDX-License-Identifier: Apache-2.0
+-->
+
 <svg xmlns="http://www.w3.org/2000/svg" width="2760" height="1980" viewBox="0 0 2760 1980">
   <title>UMBRA superscalar architecture</title>
   <desc>Logical datapath and selected control connections. Each ALU execution group includes its own rv32i_branch_cmp; core logic checks prediction direction and target. Dispatch allocates load/store entries, updates the return stack and sets CSR serialization state. Retirement qualifies committed-map, free-list, CSR and load/store effects; trace outputs are observation only. Store-data snooping uses ROB-accepted CDB writes.</desc>

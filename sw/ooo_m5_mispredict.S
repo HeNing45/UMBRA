@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: Copyright 2026 He Ning
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
     # ooo_m5_mispredict.S -- mispredict-heavy Spike-diff stimulus.
     #
     # Stresses branch speculation + recovery end-to-end vs Spike:

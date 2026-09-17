@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 He Ning
+// SPDX-License-Identifier: Apache-2.0
+
 // Cycle-driven, non-timing Verilator top for UMBRA CoreMark.
 //
 // A C++ harness drives clk/rst_n. The image is loaded into independent

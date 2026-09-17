@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: Copyright 2026 He Ning
+# SPDX-License-Identifier: Apache-2.0
+
 """Normalize Spike --log-commits output to the repo's COMMIT trace format.
 
 Trace fields:

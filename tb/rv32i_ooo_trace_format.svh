@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 He Ning
+// SPDX-License-Identifier: Apache-2.0
+
 // Shared text trace format for ROB and Spike-lockstep testbenches.
 // Include this from simulation-only code; these text records are not a
 // synthesizable interface contract.

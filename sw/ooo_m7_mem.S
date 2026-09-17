@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: Copyright 2026 He Ning
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 # ooo_m7_mem.S — memory Spike-diff program (loads + stores, lockstep).
 #
 # Self-contained: builds its own data via stores (no .data section), aligned

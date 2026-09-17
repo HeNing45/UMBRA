@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 He Ning
+// SPDX-License-Identifier: Apache-2.0
+
 `timescale 1ns/1ps
 package rv32i_ooo_pkg;
   import fyp_cpu_pkg::alu_op_e;

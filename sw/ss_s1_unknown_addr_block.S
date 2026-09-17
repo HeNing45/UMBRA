@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: Copyright 2026 He Ning
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 # Load blocked by an unresolved older store address.
 #
 # Pattern (x8): an older store whose ADDRESS is late (muldiv -> masked to an

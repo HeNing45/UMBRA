@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 He Ning
+// SPDX-License-Identifier: Apache-2.0
+
 `timescale 1ns/1ps
 // Contract-derived scoreboard for the full-picker register. No DUT-private
 // state is read. A transaction carries distinct full payload/ROB generation.

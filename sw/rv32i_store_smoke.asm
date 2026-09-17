@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright 2026 He Ning
+# SPDX-License-Identifier: Apache-2.0
+
 # Directed sub-word store smoke program for the single-cycle RTL testbench.
 #
 # The testbench preloads:

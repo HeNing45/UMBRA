@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Copyright 2026 He Ning
+// SPDX-License-Identifier: Apache-2.0
+
 // t36_harness.svh — shared program-testbench harness body.
 //
 // Include INSIDE a module. Provides: clock/reset, frontend+core DUT pair,

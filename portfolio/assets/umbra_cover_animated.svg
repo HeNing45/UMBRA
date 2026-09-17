@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2026 He Ning
+SPDX-License-Identifier: Apache-2.0
+-->
+
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 540" role="img" aria-labelledby="title description">
   <title id="title">UMBRA: a 2-wide out-of-order RISC-V processor</title>
   <desc id="description">A 2-wide, out-of-order RV32IM processor. 100 MHz FPGA out-of-context core timing; 50 MHz academic ASIC implementation; DRC and LVS checked with Calibre and IC Validator. The gold eclipse starts with the processor visible. Simplified arrows connect fetch, rename, scheduling, register read, ALUs, multiply/divide, address generation, the load/store queue and writeback. Recovery and most control wiring are omitted; the branch connection represents support in both ALUs. An architectural illustration, not a chip-layout image.</desc>
