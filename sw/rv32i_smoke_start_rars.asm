@@ -1,4 +1,4 @@
-# RARS-safe version of lab2_smoke_start.asm.
+# RARS-safe version of rv32i_smoke_start.asm.
 #
 # The local RTL smoke test intentionally uses address 0(x0) for dmem[0].
 # RARS treats address 0 as out of range, so this version uses .data labels.

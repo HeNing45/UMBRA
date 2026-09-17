@@ -3,6 +3,12 @@
 [CoreMark](coremark/README.md) and [Embench-IoT](embench/) run as bare-metal
 simulation workloads. Each has `upstream/` sources and an `umbra/` platform port.
 Assembly programs and memory images support the directed tests and Spike comparison.
+The `rv32i_*_smoke` and `rv32i_smoke_start` files are small instruction tests;
+the `_rars` variant uses data labels for execution in RARS.
+
+Embench's upstream sources retain their GPLv3 and per-file licence notices.
+See [third-party notices](../THIRD_PARTY_NOTICES.md); the repository's Apache
+licence does not replace the licences of bundled benchmarks.
 
 Run from the repository root:
 
