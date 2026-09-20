@@ -47,11 +47,11 @@ Three packed-force tests use Verilator; the other 60 use Icarus.
 
 ## Physical layout
 
-[Download the previous GDS](https://github.com/HeNing45/UMBRA/releases/download/physical-osu45-20ns-corrected/umbra_syn_island.gds)
+[Download the GDS](https://github.com/HeNing45/UMBRA/releases/download/physical-osu45-20ns-frontend/umbra_syn_island.gds)
 and [KLayout layer file](../physical/umbra_syn_island.lyp).
-The GDS is distributed through the [physical release](https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns-corrected),
-which also includes the license and third-party notices.
-The newly verified layout has not yet been uploaded; these links retain the previous release.
+The GDS is distributed through the [physical release](https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns-frontend),
+which also includes the current license, NOTICE and third-party notices.
+This layout includes the frontend correction and matches the results below.
 
 In KLayout, open the GDS, select `umbra_syn_island`, and load the layer file.
 

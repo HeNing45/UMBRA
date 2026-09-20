@@ -74,7 +74,7 @@ and Oklahoma State University. Retain this attribution and the Apache licence
 when redistributing the layout.
 
 `physical/umbra_syn_island.gds` is a release-only artifact, not a tracked git
-file. Download it from the [physical release](https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns-corrected).
+file. Download it from the [physical release](https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns-frontend).
 It contains modified layouts: layer remapping, intracell metal changes and
 added well fill. Modified intracell metal was not recharacterized.
 

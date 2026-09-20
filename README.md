@@ -15,7 +15,7 @@ SPDX-License-Identifier: Apache-2.0
   <a href="tb/">Testbenches</a> ·
   <a href="docs/IMPLEMENTATION.md">Implementation</a> ·
   <a href="#benchmarks">Benchmarks</a> ·
-  <a href="https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns-corrected">Previous GDS release</a>
+  <a href="https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns-frontend">GDS release</a>
 </p>
 
 <p align="center">
@@ -139,11 +139,11 @@ setup/hold endpoints, zero routing DRCs and zero open nets. Calibre and
 IC Validator each reported **zero findings across 167 DRC checks**, with
 **LVS CORRECT** and **LVS PASS**, respectively, on the same GDS.
 
-The new GDS is verified but not yet uploaded. These links still point to the previous layout.
+The released GDS includes the frontend correction and matches the ASIC results above.
 
-**[Download the previous GDS](https://github.com/HeNing45/UMBRA/releases/download/physical-osu45-20ns-corrected/umbra_syn_island.gds)**
+**[Download the GDS](https://github.com/HeNing45/UMBRA/releases/download/physical-osu45-20ns-frontend/umbra_syn_island.gds)**
 · [KLayout layer file](physical/umbra_syn_island.lyp)
-· [Release and notices](https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns-corrected)
+· [Release and notices](https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns-frontend)
 · [Implementation notes](docs/IMPLEMENTATION.md)
 
 ## Verification
