@@ -32,6 +32,12 @@
 `ifndef UMBRA_M3_IMEM_PIPELINED
 `define UMBRA_M3_IMEM_PIPELINED 0
 `endif
+`ifndef SS_SPIKE_READY_STALL
+`define SS_SPIKE_READY_STALL 0
+`endif
+`ifndef SS_SPIKE_RESP_LATENCY
+`define SS_SPIKE_RESP_LATENCY 0
+`endif
 
 module tb_rv32i_ss_core_spike_diff;
   import rv32i_ss_pkg::*;
@@ -96,11 +102,27 @@ module tb_rv32i_ss_core_spike_diff;
   logic        dmem_valid, dmem_we;
   logic [3:0]  dmem_be;
   word_t       dmem_addr, dmem_wdata, dmem_rdata;
+  logic        dmem_ready, dmem_rvalid, mem_en, mem_we;
+  logic [3:0]  mem_be;
+  word_t       mem_addr, mem_wdata, mem_rdata;
+
+  rv32i_ss_dmem_scratchpad #(
+    .READY_STALL(`SS_SPIKE_READY_STALL),
+    .RESP_LATENCY(`SS_SPIKE_RESP_LATENCY),
+    .MAX_OUTSTANDING(2)
+  ) u_dmem_adapter (
+    .clk(clk), .rst_n(rst_n),
+    .dmem_valid(dmem_valid), .dmem_we(dmem_we), .dmem_be(dmem_be),
+    .dmem_addr(dmem_addr), .dmem_wdata(dmem_wdata),
+    .dmem_ready(dmem_ready), .dmem_rvalid(dmem_rvalid), .dmem_rdata(dmem_rdata),
+    .mem_en(mem_en), .mem_we(mem_we), .mem_be(mem_be),
+    .mem_addr(mem_addr), .mem_wdata(mem_wdata), .mem_rdata(mem_rdata)
+  );
 
   ooo_dmem_model #(.MEM_WORDS(65536), .MEM_MSB(17)) u_dmem (
     .clk(clk), .rst_n(rst_n),
-    .addr(dmem_addr), .rdata(dmem_rdata),
-    .we(dmem_we), .be(dmem_be), .wdata(dmem_wdata),
+    .addr(mem_addr), .rdata(mem_rdata),
+    .we(mem_en && mem_we), .be(mem_be), .wdata(mem_wdata),
     .tohost_addr(32'hFFFF_FFFC), .tohost_full_addr(32'hFFFF_FFFC),
     .tohost_we(), .tohost_val()
   );
@@ -189,7 +211,7 @@ module tb_rv32i_ss_core_spike_diff;
     .commit_wdata(commit_wdata),
     .dmem_valid(dmem_valid), .dmem_we(dmem_we), .dmem_be(dmem_be),
     .dmem_addr(dmem_addr), .dmem_wdata(dmem_wdata),
-    .dmem_ready(1'b1), .dmem_rvalid(1'b1),
+    .dmem_ready(dmem_ready), .dmem_rvalid(dmem_rvalid),
     .dmem_rdata(dmem_rdata)
   );
 
@@ -233,79 +255,97 @@ module tb_rv32i_ss_core_spike_diff;
   // (commit_inst[slot][6:0]) -- copy the whole word first, same workaround the
   // IQ uses for struct-array field reads.
   word_t         rec_inst;
+  bit            accepted_store_pending;
+  word_t         accepted_store_addr, accepted_store_data;
+  logic [3:0]    accepted_store_be;
+  int            wait_cycles, delayed_response_cycles, recoveries;
+  int            load_commits, store_commits, branch_commits, muldiv_commits;
 
   always @(posedge clk) begin
-    if (rst_n && (|commit_fire)) begin
-      if (commit_fire == 2'b11)
-        dual_commit_cycles = dual_commit_cycles + 1;
-      // STORE ATTRIBUTION (addendum): the harness decodes the store
-      // from the committed instruction itself rather than echoing an RTL
-      // trace-only class bit -- an RTL-sourced flag would mask exactly the
-      // misclassification this oracle exists to catch. At most one store may
-      // commit per group, so cycle-level dmem_we must agree with exactly one
-      // fired store instruction.
-      fired_stores = 0;
-      for (emit_slot = 0; emit_slot < 2; emit_slot++) begin
-        rec_inst = commit_inst[emit_slot];
-        if (commit_fire[emit_slot] &&
-            (rec_inst[6:0] == fyp_cpu_pkg::OPCODE_STORE))
-          fired_stores = fired_stores + 1;
+    if (rst_n) begin
+      if (dmem_valid && !dmem_ready) wait_cycles++;
+      if (u_core.u_lsq.lq_out_count_q != 0) delayed_response_cycles++;
+      if (u_core.branch_recover_req) recoveries++;
+    end
+  end
+
+  always @(posedge clk) begin
+    if (rst_n) begin
+      // Acceptance can precede store retirement across recovery. Snapshot the
+      // external write, then consume it exactly once when that store retires.
+      if (mem_en && mem_we) begin
+        if (accepted_store_pending)
+          $fatal(1, "STORE_ATTRIB: second accepted store before retirement");
+        accepted_store_pending = 1'b1;
+        accepted_store_addr = mem_addr;
+        accepted_store_data = mem_wdata;
+        accepted_store_be = mem_be;
       end
-      if (dmem_we && (fired_stores != 1))
-        $fatal(1, "STORE_ATTRIB: dmem_we with %0d fired store instructions",
-               fired_stores);
-      if (!dmem_we && (fired_stores != 0))
-        $fatal(1, "STORE_ATTRIB: %0d fired store instructions without dmem_we",
-               fired_stores);
 
-      for (emit_slot = 0; emit_slot < 2; emit_slot++) begin
-        if (commit_fire[emit_slot]) begin
-          rec_order    = commit_order + commit_order_t'(emit_slot);
-          rec_inst     = commit_inst[emit_slot];
-          rec_is_store = (rec_inst[6:0] == fyp_cpu_pkg::OPCODE_STORE);
+      if (|commit_fire) begin
+        if (commit_fire == 2'b11)
+          dual_commit_cycles = dual_commit_cycles + 1;
+        // Decode store identity from the committed instruction rather than an
+        // RTL-sourced trace flag, then pair it with the accepted write.
+        fired_stores = 0;
+        for (emit_slot = 0; emit_slot < 2; emit_slot++) begin
+          rec_inst = commit_inst[emit_slot];
+          if (commit_fire[emit_slot] &&
+              (rec_inst[6:0] == fyp_cpu_pkg::OPCODE_STORE))
+            fired_stores = fired_stores + 1;
+        end
+        if (fired_stores > 1 ||
+            ((fired_stores != 0) && !accepted_store_pending))
+          $fatal(1, "STORE_ATTRIB: store commit without unique accepted write");
 
-          if (seen_commit && (rec_order !== prev_order + 1)) begin
-            $fatal(1, "COMMIT_ORDER_GAP prev=%0d now=%0d (slot %0d)",
-                   prev_order, rec_order, emit_slot);
-          end
-          seen_commit = 1'b1;
-          prev_order  = rec_order;
+        for (emit_slot = 0; emit_slot < 2; emit_slot++) begin
+          if (commit_fire[emit_slot]) begin
+            rec_order    = commit_order + commit_order_t'(emit_slot);
+            rec_inst     = commit_inst[emit_slot];
+            rec_is_store = (rec_inst[6:0] == fyp_cpu_pkg::OPCODE_STORE);
+            if (rec_is_store) store_commits++;
+            if (rec_inst[6:0] == 7'h03) load_commits++;
+            if (rec_inst[6:0] == 7'h63) branch_commits++;
+            if ((rec_inst[6:0] == 7'h33) && (rec_inst[31:25] == 7'h01))
+              muldiv_commits++;
 
-          if (trace_enable) begin
-            if (commit_rd_wen[emit_slot] && (commit_rd[emit_slot] != 5'd0))
-              $display("COMMIT pc=%08h instr=%08h rd=%0d wdata=%08h",
-                       commit_pc[emit_slot], commit_inst[emit_slot],
-                       commit_rd[emit_slot], commit_wdata[emit_slot]);
-            else
-              $display("COMMIT pc=%08h instr=%08h rd=0 wdata=00000000",
-                       commit_pc[emit_slot], commit_inst[emit_slot]);
-            // a committing store emits the canonical STORE record right
-            // after ITS OWN COMMIT line (same commit_order;). The
-            // commit-diff flow greps '^COMMIT ' so STORE lines never disturb
-            // the Spike comparison.
-            if (rec_is_store) begin
-              // canonical record via the FMT macro; explicit fields because
-              // Icarus rejects the EMIT macro's parenthesized member selects
-              store_rec.addr         = dmem_addr;
-              store_rec.data         = dmem_wdata;
-              store_rec.wmask        = dmem_be;
-              store_rec.commit_order = rec_order;
-              $display(`RV32I_OOO_STORE_TRACE_FMT, store_rec.addr,
-                       store_rec.data, store_rec.wmask, store_rec.commit_order);
+            if (seen_commit && (rec_order !== prev_order + 1)) begin
+              $fatal(1, "COMMIT_ORDER_GAP prev=%0d now=%0d (slot %0d)",
+                     prev_order, rec_order, emit_slot);
             end
-          end
+            seen_commit = 1'b1;
+            prev_order  = rec_order;
 
-          // PER-RECORD limit, not per-cycle: an odd MAX_COMMITS emits exactly
-          // that many COMMIT lines even when the final cycle retires two.
-          commit_count = commit_count + 1;
-          if (commit_count >= max_commits) begin
-            // cycles = wdog (total cycles since reset; the watchdog never
-            // resets). The LSQ differential gate parses this: identical
-            // traces, fewer cycles vs the frozen head-only core
-            // (tools/run_s1_cycle_diff.sh).
-            $display("OOO SPIKE DIFF TRACE DONE commits=%0d cycles=%0d dual_cycles=%0d",
-                     commit_count, wdog, dual_commit_cycles);
-            $finish;
+            if (trace_enable) begin
+              if (commit_rd_wen[emit_slot] && (commit_rd[emit_slot] != 5'd0))
+                $display("COMMIT pc=%08h instr=%08h rd=%0d wdata=%08h",
+                         commit_pc[emit_slot], commit_inst[emit_slot],
+                         commit_rd[emit_slot], commit_wdata[emit_slot]);
+              else
+                $display("COMMIT pc=%08h instr=%08h rd=0 wdata=00000000",
+                         commit_pc[emit_slot], commit_inst[emit_slot]);
+              if (rec_is_store) begin
+                store_rec.addr         = accepted_store_addr;
+                store_rec.data         = accepted_store_data;
+                store_rec.wmask        = accepted_store_be;
+                store_rec.commit_order = rec_order;
+                $display(`RV32I_OOO_STORE_TRACE_FMT, store_rec.addr,
+                         store_rec.data, store_rec.wmask, store_rec.commit_order);
+              end
+            end
+            if (rec_is_store) accepted_store_pending = 1'b0;
+
+            // PER-RECORD limit, not per-cycle: an odd MAX_COMMITS emits exactly
+            // that many COMMIT lines even when the final cycle retires two.
+            commit_count = commit_count + 1;
+            if (commit_count >= max_commits) begin
+              $display("OOO SPIKE DIFF TRACE DONE commits=%0d cycles=%0d dual_cycles=%0d",
+                       commit_count, wdog, dual_commit_cycles);
+              $display("SPIKE_COVER loads=%0d stores=%0d branches=%0d muldiv=%0d waits=%0d outstanding=%0d recoveries=%0d",
+                       load_commits, store_commits, branch_commits, muldiv_commits,
+                       wait_cycles, delayed_response_cycles, recoveries);
+              $finish;
+            end
           end
         end
       end
@@ -321,6 +361,9 @@ module tb_rv32i_ss_core_spike_diff;
   integer i;
   initial begin
     wdog = 0; commit_count = 0; dual_commit_cycles = 0;
+    accepted_store_pending = 1'b0;
+    wait_cycles = 0; delayed_response_cycles = 0; recoveries = 0;
+    load_commits = 0; store_commits = 0; branch_commits = 0; muldiv_commits = 0;
     seen_commit = 1'b0; prev_order = '0;
     trace_enable = $test$plusargs("TRACE");
     if (!$value$plusargs("MAX_COMMITS=%d", max_commits)) max_commits = 16;

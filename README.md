@@ -15,7 +15,7 @@ SPDX-License-Identifier: Apache-2.0
   <a href="tb/">Testbenches</a> ·
   <a href="docs/IMPLEMENTATION.md">Implementation</a> ·
   <a href="#benchmarks">Benchmarks</a> ·
-  <a href="https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns-corrected">GDS release</a>
+  <a href="https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns-corrected">Previous GDS release</a>
 </p>
 
 <p align="center">
@@ -33,7 +33,7 @@ includes the RTL, superscalar testbenches, bare-metal benchmarks and physical
 layout, alongside the earlier single-cycle, pipelined and scalar out-of-order cores.
 
 Implementation results include **100 MHz routed FPGA core timing** and a
-**50 MHz ASIC layout**, with the released GDS checked by both Calibre and IC Validator.
+**50 MHz ASIC layout**, checked by both Calibre and IC Validator.
 The FPGA result is out-of-context timing on a KU5P, not a board-level result;
 the ASIC is an academic FreePDK45 / OSU gscl45nm implementation, not fabricated
 silicon.
@@ -126,40 +126,42 @@ architecture conformance are outside the implemented scope.
 | --- | --- | --- |
 | Target | Kintex UltraScale+ KU5P | FreePDK45 / OSU gscl45nm |
 | Clock | **100 MHz / 10 ns** | **50 MHz / 20 ns** |
-| Setup slack | **+0.446 ns** | **+3.943214 ns** |
-| Hold slack | **+0.012 ns** | **+0.000031 ns** |
+| Setup slack | **+0.474 ns** | **+3.181066 ns** |
+| Hold slack | **+0.009 ns** | **+0.000109 ns** |
 | Measurement | Vivado out-of-context routing | StarRC extraction + PrimeTime |
 
 The FPGA timing covers the CPU block only. External memory, full clock network
 integration and software execution on a board are not included.
 
 The ASIC flow includes synthesis, placement, clock tree synthesis, routing,
-formal equivalence and extracted timing. The released layout has zero failing
+formal equivalence and extracted timing. The new layout has zero failing
 setup/hold endpoints, zero routing DRCs and zero open nets. Calibre and
 IC Validator each reported **zero findings across 167 DRC checks**, with
 **LVS CORRECT** and **LVS PASS**, respectively, on the same GDS.
 
-**[Download the GDS](https://github.com/HeNing45/UMBRA/releases/download/physical-osu45-20ns-corrected/umbra_syn_island.gds)**
+The new GDS is verified but not yet uploaded. These links still point to the previous layout.
+
+**[Download the previous GDS](https://github.com/HeNing45/UMBRA/releases/download/physical-osu45-20ns-corrected/umbra_syn_island.gds)**
 · [KLayout layer file](physical/umbra_syn_island.lyp)
 · [Release and notices](https://github.com/HeNing45/UMBRA/releases/tag/physical-osu45-20ns-corrected)
 · [Implementation notes](docs/IMPLEMENTATION.md)
 
 ## Verification
 
-The repository includes 66 superscalar testbench sources, shared memory and
+The repository includes 67 superscalar testbench sources, shared memory and
 trace helpers, Spike comparison support, and CoreMark® and Embench ports.
 CoreMark is a trademark of EEMBC.
 
 | Check | Result |
 | --- | --- |
-| [Spike comparison](verification/normalize_spike_trace.py) | The exported 16-instruction ALU commit-trace test passed |
+| [Spike comparison](verification/run_ss_spike_regression.sh) | 16-instruction ALU smoke plus 36,864 seeded RV32IM commits and accepted store effects matched |
 | [Directed testbenches](tb/) | 60 of 61 passed; the RAS benchmark retains a cycle-count mismatch, 403 observed versus 374 expected |
 | [CoreMark-derived CRC check](sw/coremark/README.md) | Performance and validation seeds passed the expected CRC checks |
 | [Embench-IoT](sw/embench/) | All 19 programs completed with successful return values |
 
 ## Benchmarks
 
-Measured on the corrected RTL with GCC 15.2.0 and the same delayed-memory
+Rerun on the corrected RTL with GCC 15.2.0 and the same delayed-memory
 configuration for both compiler profiles.
 
 | Benchmark | `-O2` | `max` |
@@ -196,7 +198,7 @@ Use `PROFILE=o2` to reproduce the comparison column.
 
 This is an academic implementation, not foundry signoff. The sub-picosecond
 ASIC hold margin is not a robustness margin. Changed intracell metal was not
-recharacterized, and 101,234 zero-limit capacitance entries remain unresolved
+recharacterized, and 101,843 zero-limit capacitance entries remain unresolved
 in the model. Some timing-check classes are untested; multi-corner analysis,
 IR drop, electromigration, packaging and silicon qualification are not covered.
 

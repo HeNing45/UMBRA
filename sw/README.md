@@ -27,6 +27,7 @@ make coremark MEMORY=delayed PROFILE=max MODE=performance ITERATIONS=16
 make coremark MEMORY=delayed PROFILE=max MODE=validation ITERATIONS=1
 make embench MEMORY=delayed PROFILE=max BENCH=all
 make spike
+make spike-extended
 ```
 
 Use `CROSS=` to select a RISC-V compiler prefix. `BENCH=all` runs the included

@@ -44,7 +44,7 @@ def require(condition, message):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("kind", choices=("test", "coremark", "embench", "spike"))
+    parser.add_argument("kind", choices=("raw", "test", "coremark", "embench", "spike"))
     parser.add_argument("--mode", choices=("performance", "validation"), default="performance")
     parser.add_argument("--log", default="build/run.log")
     parser.add_argument("--timeout", type=int, default=300)
@@ -69,6 +69,8 @@ def main():
 
     require(bool(command), "Missing simulator command")
     text = run(command, args.log, args.timeout)
+    if args.kind == "raw":
+        return
     if args.kind == "test":
         counted = re.search(r"PASS checks=[1-9]\d*", text)
         latency_test = any("tb_rv32i_ss_dmem_scratchpad_latk" in arg for arg in command)

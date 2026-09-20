@@ -177,7 +177,8 @@ module rv32i_ss_frontend
   logic        head_pred_type_match1;
   logic        head_pred_target_mismatch0;
   logic        head_pred_target_mismatch1;
-  logic        head_pred_site_consumed;
+  logic        head_pred_site_consumed0;
+  logic        head_pred_site_consumed1;
   logic        head_pred_false_type;
   logic        head_pred_target_mismatch;
   logic        slot1_pred_valid;
@@ -816,18 +817,20 @@ rv32i_ss_decode u_dec1 (
     && !(slot0_is_branch && slot1_is_branch) && !(dec_is_mem && dec1_is_mem)
     && !pred_taken0;
 
-  assign head_pred_site_consumed =
-      (head_pred_at_slot0 && decoded_slot_valid[0]) ||
-      (head_pred_at_slot1 && decoded_slot_valid[1]);
-  assign head_pred_false_type = head_pred_site_consumed &&
-      ((head_pred_at_slot0 && !head_pred_type_match0) ||
-       (head_pred_at_slot1 && !head_pred_type_match1));
-  assign head_pred_target_mismatch = head_pred_site_consumed &&
-      (head_pred_target_mismatch0 || head_pred_target_mismatch1);
+  assign head_pred_site_consumed0 =
+      head_pred_at_slot0 && decoded_slot_valid[0];
+  assign head_pred_site_consumed1 =
+      head_pred_at_slot1 && decoded_slot_valid[1];
+  assign head_pred_false_type =
+      (head_pred_site_consumed0 && !head_pred_type_match0) ||
+      (head_pred_site_consumed1 && !head_pred_type_match1);
+  assign head_pred_target_mismatch =
+      (head_pred_site_consumed0 && head_pred_target_mismatch0) ||
+      (head_pred_site_consumed1 && head_pred_target_mismatch1);
   assign steer_repair_fire = bundle_fire &&
       (head_pred_false_type || head_pred_target_mismatch);
   assign steer_repair_target = head_pred_target_mismatch
-      ? (head_pred_target_mismatch0
+      ? ((head_pred_site_consumed0 && head_pred_target_mismatch0)
          ? exact_branch_target0 : exact_branch_target1)
       : (head_pc + ((decoded_slot_valid == 2'b11) ? 32'd8 : 32'd4));
 

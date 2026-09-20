@@ -41,9 +41,9 @@ CFLAGS := $(OPT_FLAGS) -g -march=rv32im -mabi=ilp32 -mcmodel=medlow -mstrict-ali
           -fno-pie -fno-stack-protector -ffunction-sections -fdata-sections
 LDFLAGS := -nostdlib -nostartfiles -static -Wl,--gc-sections -Wl,--no-relax
 
-.PHONY: help lint test simulator coremark embench spike
+.PHONY: help lint test simulator coremark embench spike spike-extended
 help:
-	@echo 'make lint | test TB=<module> | coremark MODE=performance|validation | embench BENCH=<name>|all | spike'
+	@echo 'make lint | test TB=<module> | coremark MODE=performance|validation | embench BENCH=<name>|all | spike | spike-extended'
 	@echo 'Tools: Icarus, Verilator, Python 3, a C++ compiler, RISC-V GCC/binutils, and Spike for trace comparison.'
 	@echo 'Benchmarks: MEMORY=zero (default) or MEMORY=delayed (one-cycle responses, two outstanding reads).'
 	@echo 'Compiler profile: PROFILE=o2 (default) or PROFILE=max. Results are stored separately.'
@@ -105,3 +105,6 @@ spike:
 	iverilog -g2012 -s tb_rv32i_ss_core_spike_diff -o build/spike/rtl.vvp \
 	  -f $(FILELIST) tb/tb_rv32i_ss_core_spike_diff.sv tb/ooo_dmem_model.sv
 	$(PYTHON) verification/run.py spike --timeout $(TIMEOUT)
+
+spike-extended:
+	bash verification/run_ss_spike_regression.sh
