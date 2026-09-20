@@ -155,7 +155,7 @@ CoreMark is a trademark of EEMBC.
 | Check | Result |
 | --- | --- |
 | [Spike comparison](verification/run_ss_spike_regression.sh) | 16-instruction ALU smoke plus 36,864 seeded RV32IM commits and accepted store effects matched |
-| [Directed testbenches](tb/) | 60 of 61 passed; the RAS benchmark retains a cycle-count mismatch, 403 observed versus 374 expected |
+| [Directed testbenches](tb/) | Rerun on `03a2e5c`: 62 of 63 passed; the RAS benchmark retains a cycle-count mismatch, 403 observed versus 374 expected |
 | [CoreMark-derived CRC check](sw/coremark/README.md) | Performance and validation seeds passed the expected CRC checks |
 | [Embench-IoT](sw/embench/) | All 19 programs completed with successful return values |
 

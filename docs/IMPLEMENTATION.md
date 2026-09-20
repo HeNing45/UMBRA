@@ -40,8 +40,10 @@ CSR/trap support.
   unchanged XGBoost self-check is weak at the default scale factor.
 
 CoreMark is a trademark of EEMBC. These are RTL simulation checks, not official
-CoreMark scores. The directed superscalar suite passed 60 of 61 tests;
-`tb_rv32i_ss_ras_bench` still has a cycle-count mismatch (403 versus 374 expected).
+CoreMark scores. The directed suite was rerun on `03a2e5c`: 62 of 63 tests
+passed, including the frontend repair and memory-latency conformance tests.
+Three packed-force tests use Verilator; the other 60 use Icarus.
+`tb_rv32i_ss_ras_bench` remains the only failure (403 versus 374 expected).
 
 ## Physical layout
 
