@@ -32,6 +32,11 @@ out-of-order execution and 2-wide, in-order retirement. The repository
 includes the RTL, superscalar testbenches, bare-metal benchmarks and physical
 layout, alongside the earlier single-cycle, pipelined and scalar out-of-order cores.
 
+The design is inspired by [BOOM](https://boom-core.org/), with custom
+SystemVerilog implementations of the frontend, unified issue queue, execution
+datapath and memory interface. BOOM's per-branch allocation-list recovery is
+one of the mechanisms adopted in UMBRA's register renaming.
+
 Implementation results include **100 MHz routed FPGA core timing** and a
 **50 MHz ASIC layout**, checked by both Calibre and IC Validator.
 The FPGA result is out-of-context timing on a KU5P, not a board-level result;
@@ -76,6 +81,16 @@ unit and a dedicated address generation unit feed two writeback lanes.
 8-entry load and store queues manage memory operations, while retirement
 stays in program order. Registered selection and operand boundaries separate
 scheduling from execution.
+
+At a high level, the pipeline is organised into seven stages: **Fetch,
+Decode/Rename/Dispatch, Issue, Register Read, Execute, Memory and Writeback**.
+Retirement is tracked separately by the reorder buffer. This is comparable
+in broad organisation to the [seven-stage pipeline described in BOOM's
+documentation](https://docs.boom-core.org/en/latest/sections/intro-overview/boom-pipeline.html),
+but the stage boundaries differ: UMBRA combines decode, rename and dispatch,
+and separates issue from register read. Queuing and variable-latency operations
+mean this is not a fixed seven-cycle instruction latency, nor does the stage
+count imply matching BOOM's performance or feature set.
 
 [![UMBRA 2-wide out-of-order core overview](portfolio/assets/umbra_core_overview.svg)](portfolio/assets/umbra_core_overview.svg)
 
